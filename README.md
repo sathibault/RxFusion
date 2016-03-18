@@ -18,16 +18,16 @@ RxFusion uses a natural and readable syntax for data flow programming.
 The following example illustrates the C++ syntax for processing
 accelerometer data:
 
-```
+```c++
   // Extract x-axis and calculate a moving average with a window of 4.
   auto smooth = accelerometer >> Index<Vec<short>>(0) >> Average<short,4>();
 
   // Produce tuples of original value, min and max over a window of 8.
   auto box = smooth & (smooth >> Min<short,8>()) & (smooth >> Max<short,9>());
 
-  // Custom function using C++ 2011 anyomous function uses the original
+  // Custom function using C++ 2011 anonymous function uses the original
   // value with the min/max to detect rising and falling edges.
-  auto edges = Map<xyz,int>([](xyz& vec) -> int {
+  auto edges = box >> Map<xyz,int>([](xyz& vec) -> int {
     int pos = (vec._1 - vec._2) > 30;
     int neg = (vec._3 - vec._1) > 30;
     return pos - neg;
