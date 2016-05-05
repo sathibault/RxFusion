@@ -24,6 +24,54 @@ A Reactive programming framework for IoT from edge to cloud.
   * Cloud connection development
   * PlatformIO integration
 
+## Examples
+
+These are some prototype samples developed on the Arduino Zero and
+MKR1000 boards.
+
+### Hardware I/O example
+
+```c++
+// Push button source on pin 3
+BitIn<bool> btn(3);
+// LED outptut on pin 7
+BitOut<bool> led(7);
+
+// The main function
+void app() {
+  // The button sends true (down) false (up) every cycle.
+  // F F F F F F F F F T T T T T T F F F F F F F F T T T T T F F F T T F
+  // Distinct sends on messages distinct from the last message
+  // F                 T           F               T         F     T   F
+  // True only passes the true messages
+  //                   T                           T               T
+  // Toggle starts at the false state and toggles every time it gets message
+  //                   T                           F               T
+  btn >> Distinct<bool>() >> True() >> Toggle<bool,bool>(false) >> led;
+}
+```
+
+### Cloud example
+
+```c++
+// Instantiate a sensor source on pin A1
+AnalogIn<int> ambient(A1);
+
+// Instantiate a consumer to forward data to Elasticsearch on AWS
+WiFiClient client;
+HttpPost awsES(client, AWS_HOST, 80, "/sensors/reading", 0, NULL);
+
+// The main function
+void app() {
+  wifiSetup();
+  // Create the pipline:  AverageOver computes an average of the incoming
+  // sensor data every 15 seconds, and Format builds the JSON packet with the
+  // average ($1) and timestamp ($t) which is sent to AWS by awsES.
+  ambient >> AverageOver<int>(SECONDS(15)) >> Format<int>("{\"ambient\":$1,\"ts\":$t000}") >> awsES;
+}
+```
+
+
 ## Preview
 
 RxFusion uses a natural and readable syntax for data flow programming.
