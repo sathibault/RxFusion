@@ -54,13 +54,13 @@ template <class T1, class T2> Tuple2<T1,T2> operator*(Tuple2<T1,T2>& a, int k) {
   return Tuple2<T1,T2>(a._1 * (T1)k, a._2 * (T2)k);
 }
 template <class T1, class T2> Tuple2<T1,T2> operator*(Tuple2<T1,T2>& a, double k) {
-  return Tuple2<T1,T2>(a._1 * b._1, a._2 * b._2);
+  return Tuple2<T1,T2>(a._1 * (T1)k, a._2 * (T2)k);
 }
 template <class T1, class T2> Tuple2<T1,T2> operator/(Tuple2<T1,T2>& a, int k) {
   return Tuple2<T1,T2>(a._1 / (T1)k, a._2 / (T2)k);
 }
 template <class T1, class T2> Tuple2<T1,T2> operator/(Tuple2<T1,T2>& a, double k) {
-  return Tuple2<T1,T2>(a._1 / b._1, a._2 / b._2);
+  return Tuple2<T1,T2>(a._1 / (T1)k, a._2 / (T2)k);
 }
 
 template <class T1, class T2, class T3> class Tuple3 {
