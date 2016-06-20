@@ -24,6 +24,45 @@ A Reactive programming framework for IoT from edge to cloud.
   * Cloud connection development
   * PlatformIO integration
 
+## Building
+
+At this point, this project contains only RxFusion foundation which is
+the common device-independent layer.  However, you can build desktop
+applications for simulation and experimentation.  Have a look at the
+unit testes for examples.
+
+### Run unit tests
+
+Clone RxFusion framework:
+
+```bash
+$ git clone https://github.com/sathibault/RxFusion.git
+$ cd RxFusion/
+```
+
+Clone and build GoogleTest framework:
+
+```bash
+$ git submodule init
+$ git submodule update
+$ cd tests/googletest
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+```
+
+Build and run unit tests:
+
+```bash
+$ cd ../..
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ make test
+```
+
 ## Examples
 
 These are some prototype samples developed on the Arduino Zero and
