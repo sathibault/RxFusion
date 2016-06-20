@@ -1,0 +1,19 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+PROJECT("RxFusion Test")
+SET(CMAKE_CXX_COMPILER g++)
+SET(CMAKE_CXX_FLAGS "-std=c++11")
+CMAKE_POLICY(VERSION 3.2)
+INCLUDE_DIRECTORIES(.. ./googletest/googletest/include)
+LINK_DIRECTORIES(./googletest/build/googlemock/gtest)
+
+ENABLE_TESTING()
+
+function(add_g_test target)
+  ADD_EXECUTABLE(${target} ${ARGN})
+  TARGET_LINK_LIBRARIES(${target} gtest gtest_main)
+  ADD_TEST(${target} ${target})
+endfunction()
+
+add_g_test(test_builder test_builder.cpp)
+add_g_test(test_sources test_sources.cpp)
+add_g_test(test_operators test_operators.cpp)
