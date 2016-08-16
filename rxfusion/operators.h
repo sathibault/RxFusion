@@ -79,7 +79,7 @@ template <class T, int width> Operator<T,T> *WinSum() {
 }
 
 template <class T, int width> Operator<T,T> *SumOf() {
-  return BufFold1<T,T,width>([](T& cur, T& accum)->T { return accum+cur; });
+  return BatchFold1<T,T,width>([](T& cur, T& accum)->T { return accum+cur; });
 }
 
 template <class T> const Compound<T,T> SumOver(unsigned millis) {
@@ -103,7 +103,7 @@ template <class T, int width> const Compound<T,T> WinAverage() {
 }
 
 template <class T, int width> const Compound<T,T> AverageOf() {
-  auto *sum = BufFold1<T,T,width>([](T& cur, T& accum)->T { return accum+cur; });
+  auto *sum = BatchFold1<T,T,width>([](T& cur, T& accum)->T { return accum+cur; });
   auto *map = Map<T,T>([](T& accum)->T { return accum/width; });
   map->attach(sum);
   return Compound<T,T>(sum, map);
@@ -139,7 +139,7 @@ template <class T, int width> const Compound<T,T> WinMin() {
 }
 
 template <class T, int width> Operator<T,T> *MinOf() {
-  return BufFold1<T,T,width>([](T& cur, T& accum)->T {
+  return BatchFold1<T,T,width>([](T& cur, T& accum)->T {
       return (cur < accum) ? cur : accum;
     });
 }
@@ -170,7 +170,7 @@ template <class T, int width> const Compound<T,T> WinMax() {
 }
 
 template <class T, int width> Operator<T,T> *MaxOf() {
-  return BufFold1<T,T,width>([](T& cur, T& accum)->T {
+  return BatchFold1<T,T,width>([](T& cur, T& accum)->T {
       return (cur > accum) ? cur : accum;
     });
 }
@@ -206,7 +206,7 @@ template <class T> const Compound<T,T> Take(int take) {
   return Compound<T,T>(cnt, prj);
 }
 
-template <class T> const Compound<T,T> Distinct() {
+template <class T> const Compound<T,T> Dedup() {
   auto *scan = Scan<T,Tuple2<T,Maybe<T>>>([](T& cur, Tuple2<T,Maybe<T>>& last) -> Tuple2<T,Maybe<T>> {
       return Tuple2<T,Maybe<T>>(cur, Maybe<T>(last._1));
     }, Tuple2<T,Maybe<T>>());

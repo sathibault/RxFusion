@@ -160,7 +160,7 @@ template <class T, class U, int capacity> SlidingOp<T,U,capacity> *Sliding(const
 
 //////////////////////////////////////// End-to-end window operators
 
-template <class T, int capacity> class BufferOp : public Operator<T,fifo<T,capacity>> {
+template <class T, int capacity> class BatchOp : public Operator<T,fifo<T,capacity>> {
  private:
   fifoWr<T,capacity> window;
  public:
@@ -175,13 +175,13 @@ template <class T, int capacity> class BufferOp : public Operator<T,fifo<T,capac
 
 // Optimized storage-free foldl/scan.
 
-template <class T, class U, int width> class BufFoldOp : public Operator<T,U> {
+template <class T, class U, int width> class BatchFoldOp : public Operator<T,U> {
  private:
   int count;
   U accum, initial;
   std::function<U (T&, U&)> fun;
  public:
-  BufFoldOp(const std::function<U (T&, U&)>& fun, U init)
+  BatchFoldOp(const std::function<U (T&, U&)>& fun, U init)
     : accum(init), initial(init), fun(fun) { count = 0; }
 
   void onData(RxNode *source, void *value) {
@@ -195,17 +195,17 @@ template <class T, class U, int width> class BufFoldOp : public Operator<T,U> {
   }
 };
 
-template <class T, class U, int width> BufFoldOp<T,U,width> *BufFold(const std::function<U (T&, U&)>& fun, U init) {
-  return new BufFoldOp<T,U,width>(fun, init);
+template <class T, class U, int width> BatchFoldOp<T,U,width> *BatchFold(const std::function<U (T&, U&)>& fun, U init) {
+  return new BatchFoldOp<T,U,width>(fun, init);
 }
 
-template <class T, class U, int width> class BufFold1Op : public Operator<T,U> {
+template <class T, class U, int width> class BatchFold1Op : public Operator<T,U> {
  private:
   int count;
   U accum;
   std::function<U (T&, U&)> fun;
  public:
-  BufFold1Op(const std::function<U (T&, U&)>& fun) : fun(fun) {
+  BatchFold1Op(const std::function<U (T&, U&)>& fun) : fun(fun) {
     count = 0;
   }
 
@@ -222,17 +222,17 @@ template <class T, class U, int width> class BufFold1Op : public Operator<T,U> {
   }
 };
 
-template <class T, class U, int width> BufFold1Op<T,U,width> *BufFold1(const std::function<U (T&, U&)>& fun) {
-  return new BufFold1Op<T,U,width>(fun);
+template <class T, class U, int width> BatchFold1Op<T,U,width> *BatchFold1(const std::function<U (T&, U&)>& fun) {
+  return new BatchFold1Op<T,U,width>(fun);
 }
 
-template <class T, class U, int width> class BufScanOp : public Operator<T,U> {
+template <class T, class U, int width> class BatchScanOp : public Operator<T,U> {
  private:
   int count;
   U accum, initial;
   std::function<U (T&, U&)> fun;
  public:
-  BufScanOp(const std::function<U (T&, U&)>& fun, U init)
+  BatchScanOp(const std::function<U (T&, U&)>& fun, U init)
     : accum(init), initial(init), fun(fun) { count = 0; }
 
   void onData(RxNode *source, void *value) {
@@ -246,8 +246,8 @@ template <class T, class U, int width> class BufScanOp : public Operator<T,U> {
   }
 };
 
-template <class T, class U, int width> BufScanOp<T,U,width> *BufScan(const std::function<U (T&, U&)>& fun, U init) {
-  return new BufScanOp<T,U,width>(fun, init);
+template <class T, class U, int width> BatchScanOp<T,U,width> *BatchScan(const std::function<U (T&, U&)>& fun, U init) {
+  return new BatchScanOp<T,U,width>(fun, init);
 }
 
 
