@@ -24,6 +24,45 @@ A Reactive programming framework for IoT from edge to cloud.
   * Cloud connection development
   * PlatformIO integration
 
+## Javascript Preview
+
+Perfect for gateways, cloud or SoC edge devices, the rxfusion module
+for Node.js makes it easy to consume upstream data, transform it,
+aggregate it and send it on to downstream services, databases, or web
+clients.
+
+```javascript
+http.listen(8090, function(){
+    var mcu = new Mcu();
+    var browser = new SocketIO(io, 'hist');
+
+    // Average 5 samples at a time and send a sliding window of data to socket.io clients
+    rx()(mcu >> AverageOf(5) >> Window(16,true) >> browser);
+});
+```
+
+This example uses RxFusion embedded in a Node.js web server and sends
+data to web clients via a socket.io connector.  The sensor data is
+coming from a locally connected MCU.  The data is processed with the
+same operators available for C++, but without the types!
+
+The `AverageOf` operator outputs an average every 5 samples to reduce
+the volume of data, and the `Window` operator sliding window of the
+last 16 values.  The browser client uses the [C3](http://c3js.org/)
+library to display the sliding window of data real-time in a graph:
+
+```
+var chart = c3.generate({
+  data: { columns: [], type: 'spline' }
+});
+
+var socket = io();
+socket.on('hist', function(data) {
+  chart.load({ columns: [ Array.concat('ambient', data) ] });
+  socket.emit('ack', 'ok');
+});
+```
+
 ## Building
 
 At this point, this project contains only RxFusion foundation which is
@@ -63,7 +102,7 @@ $ make
 $ make test
 ```
 
-## Examples
+## C++ Examples
 
 These are some prototype samples developed on the Arduino Zero and
 MKR1000 boards.
@@ -109,34 +148,6 @@ void app() {
   ambient >> AverageOver<int>(SECONDS(15)) >> Format<int>("{\"ambient\":$1,\"ts\":$t000}") >> awsES;
 }
 ```
-
-
-## Preview
-
-RxFusion uses a natural and readable syntax for data flow programming.
-The following example illustrates the C++ syntax for processing
-accelerometer data:
-
-```c++
-  // Extract x-axis and calculate a moving average with a window of 4.
-  auto smooth = accelerometer >> Index<Vec<short>>(0) >> Average<short,4>();
-
-  // Produce tuples of original value, min and max over a window of 8.
-  auto box = smooth & (smooth >> Min<short,8>()) & (smooth >> Max<short,9>());
-
-  // Custom function using C++ 2011 anonymous function uses the original
-  // value with the min/max to detect rising and falling edges.
-  auto edges = box >> Map<xyz,int>([](xyz& vec) -> int {
-    int pos = (vec._1 - vec._2) > 30;
-    int neg = (vec._3 - vec._1) > 30;
-    return pos - neg;
-  })
-```
-
-To see what's going on here visually, take a look at the RxFusion Lab
-[demonstration video](https://www.youtube.com/watch?v=mB-89ANRdmU).
-
-Javascript code uses the same data flow syntax without the typing.
 
 ## Concepts
 
