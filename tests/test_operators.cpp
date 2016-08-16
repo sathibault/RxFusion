@@ -46,3 +46,23 @@ TEST(OperatorTest, Over) {
   r >> Iterate<int>(150) >> MaxOver<int>(500) >> out;
   EXPECT_STREQ(out.text(), "3 6 9");
 }
+
+TEST(OperatorTest, Misc) {
+  Doc<int> out;
+  Range<int> r(1,10);
+
+  r >> Map<int,int>([](int x)->int { return x/3; }) >> Dedup<int>() >> out;
+  EXPECT_STREQ(out.text(), "0 1 2 3");
+  out.clear();
+
+  r >> Drop<int>(7) >> out;
+  EXPECT_STREQ(out.text(), "8 9 10");
+  out.clear();
+
+  r >> Take<int>(3) >> out;
+  EXPECT_STREQ(out.text(), "1 2 3");
+  out.clear();
+
+  r >> Toggle<int,int>(0) >> out;
+  EXPECT_STREQ(out.text(), "1 0 1 0 1 0 1 0 1 0");
+}
