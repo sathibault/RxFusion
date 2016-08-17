@@ -47,6 +47,27 @@ TEST(OperatorTest, Over) {
   EXPECT_STREQ(out.text(), "3 6 9");
 }
 
+TEST(OperatorTest, Timed) {
+  Doc<int> out;
+  Range<int> ra(1,3);
+  Range<int> rb(5,8);
+
+  // 80 5
+  // 100 1
+  // 160 6
+  // 200 2
+  // 240 7
+  // 300 3
+  // 320 8
+
+  ((ra >> Iterate<int>(100)) + (rb >> Iterate<int>(80))) >> Sample<int>(140) >> out;
+  EXPECT_STREQ(out.text(), "1 7 8");
+  out.clear();
+
+  ((ra >> Iterate<int>(100)) + (rb >> Iterate<int>(80))) >> Debounce<int>(30) >> out;
+  EXPECT_STREQ(out.text(), "1 6 2 7 8");
+}
+
 TEST(OperatorTest, Misc) {
   Doc<int> out;
   Range<int> r(1,10);

@@ -47,6 +47,8 @@ template <class T> class PipeMerge {
 
 template <class T> void operator>>(const PipeMerge<T>& m, Consumer<T>& sink) { sink.attach(m.obs()); CONSTRUCTED }
 
+template <class T, class U> const PipeNode<U> operator>>(const PipeMerge<T>& m, Operator<T,U> *op) {  op->attach(m.obs());  return PipeNode<U>(op); }
+
 template <class T, int len> class PipeVec {
  public:
   VecWr<Observable<T>*,len> args;
@@ -62,6 +64,7 @@ template <class T, int len> class PipeVec {
 
 template <class T, int len> void operator>>(const PipeVec<T,len>& v, Consumer<Vec<T,len>>& sink) { sink.attach(v.obs()); CONSTRUCTED }
 
+template <class T, int len, class U> const PipeNode<U> operator>>(const PipeVec<T,len>& v, Operator<T,U> *op) {  op->attach(v.obs());  return PipeNode<U>(op); }
 
 template <class T, class U> class PipeTuple2 {
  public:

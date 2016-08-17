@@ -190,11 +190,13 @@ template <class T> class Observable : public RxNode {
 
 template <class T> class Originator : public Observable<T> {
  public:
+  virtual ~Originator() { unregisterScheduled(this); }
+
   virtual void onData(RxNode *pub, void *val) {}
   virtual void onClose(RxNode *source) {}
 
   virtual void subscribe(RxNode *node) {
-    if (this->subscribers.empty()) registerOrigin(this);
+    if (this->subscribers.empty()) registerScheduled(this);
     Observable<T>::subscribe(node);
   }
 };
@@ -288,7 +290,8 @@ template <class T, class U> class Compound {
   Compound(RxNode *i, Observable<U> *o) : first(i), last(o) {}
 };
 
-void registerOrigin(RxNode *node);
+void registerScheduled(RxNode *node);
+void unregisterScheduled(RxNode *node);
 void scheduleAlways(RxNode *node);
 void scheduleInterval(RxNode *node, unsigned millis);
 void runAll();

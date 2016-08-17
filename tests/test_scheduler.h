@@ -2,106 +2,155 @@ class Scheduled {
  public:
   uint32_t time, interval;
   RxNode *node;
-  Scheduled *next;
-  Scheduled(RxNode *src, Scheduled *nxt) { node=src; next=nxt; }
-  Scheduled(RxNode *src, unsigned millis) {
-    node=src;
-    next=NULL;
+  Scheduled *prev, *next;
+
+  Scheduled() { node = NULL; prev = next = NULL; }
+  Scheduled(RxNode *src) {
+    node = src;
+    prev = next = NULL;
+    node->schedule = this;
+  }
+
+  void clear() { node = NULL; }
+
+  void setInterval(unsigned millis) {
     interval = millis;
   }
-  Scheduled *prepend(Scheduled *pl) { next = pl; return this; }
-  void insertAfter(Scheduled *pl) { next = pl->next; pl->next = this; }
+
+  void insBefore(Scheduled *pl) {
+    prev = pl->prev;
+    next = pl;
+    next->prev = this;
+    if (prev != NULL)
+      prev->next = this;
+  }
+
+  void insAfter(Scheduled *pl) {
+    prev = pl;
+    next = pl->next;
+    prev->next = this;
+    if (next != NULL)
+      next->prev = this;
+  }
+
+  void safeRemove() {
+    if (prev != NULL) {
+      prev->next = next;
+      if (next != NULL) {
+	next->prev = prev;
+	next = NULL;
+      }
+      prev = NULL;
+    }
+  }
 };
 
 class Scheduler {
   uint32_t now;
-  Scheduled *runnables;
-  Scheduled *always,*interval;
+
+  Scheduled unscheduled,deleted;
+  Scheduled always;
+  Scheduled interval;
  public:
-  Scheduler() { runnables = NULL; always = NULL; interval = NULL; }
+  Scheduler() { }
 
   void schedule(Scheduled *p) {
+    // from previous time rather that now so as to not accumulate error
     p->time += p->interval;
-    Scheduled *prev = NULL;
-    for (Scheduled *pi = interval; pi != NULL; pi = pi->next) {
-      if (pi->time > p->time)
+    Scheduled *prev = &interval;
+    for (Scheduled *si = interval.next; si != NULL; si = si->next) {
+      if (si->time > p->time)
 	break;
-      prev = pi;
+      prev = si;
     }
-    if (prev != NULL)
-      p->insertAfter(prev);
-    else
-      interval = p->prepend(interval);
+    p->insAfter(prev);
+    //printf("NEXT %d.%09d\n", p->time.tv_sec,p->time.tv_nsec);
   }
 
   void add(RxNode *node) {
-    Scheduled *s = runnables;
-    while (s != NULL && s->node != node) s = s->next;
-    if (s == NULL) {
-      runnables = new Scheduled(node, runnables);
+    if (node->schedule == NULL) {
+      Scheduled *p = new Scheduled(node);
+      node->schedule = p;
+      p->insAfter(&unscheduled);
       node->init();
     }
   }
 
   void addAlways(RxNode *node) {
-    always = new Scheduled(node, always);
+    Scheduled *p = (Scheduled *)(node->schedule);
+    p->safeRemove();
+    p->insAfter(&always);
   }
 
   void addInterval(RxNode *node, unsigned millis) {
-    Scheduled *p = new Scheduled(node, millis);
+    Scheduled *p = (Scheduled *)(node->schedule);
+    p->safeRemove();
     p->time = now;
+    p->setInterval(millis);
     schedule(p);
   }
 
+  void remove(RxNode *node) {
+    Scheduled *p = (Scheduled *)(node->schedule);
+    if (p != NULL)
+      p->clear();
+  }
+
   void run() {
-    Scheduled *s, *prev;
-    
+    Scheduled *si, *next;
+
     now = 0;
-    while (always != NULL || interval != NULL) {
+    while (always.next != NULL || interval.next != NULL) {
       // Run scheduled
-      if (interval != NULL) {
-	for (s = interval; s != NULL; s = interval) {
-	  if (now < s->time) break;
-	  interval = interval->next;
-	  if (s->node->run())
-	    schedule(s);
-	  else
-	    delete s;
+      if (interval.next != NULL) {
+	for (si = interval.next; si != NULL; si = next) {
+	  if (now < si->time) break;
+	  next = si->next;
+	  si->safeRemove();
+	  if (si->node != NULL) {
+	    if (si->node->run() && si->node != NULL)
+	      schedule(si);
+	    else if (si->node != NULL)
+	      si->insAfter(&unscheduled);
+	    else
+	      delete si;
+	  } else
+	    delete si;
 	}
       }
+
       // Run always
-      prev = NULL;
-      for (s = always; s != NULL; ) {
-        if (s->node->run()) {
-          s = s->next;
-        } else {
-          if (prev != NULL) {
-            prev->next = s->next;
-	    delete s;
-            s = prev->next;
-          } else {
-            always = s->next;
-	    delete s;
-            s = always;
-          }
+      for (si = always.next; si != NULL; si = next) {
+	next = si->next;
+	if (si->node != NULL) {
+	  if (!si->node->run() && si->node != NULL) {
+	    si->safeRemove();
+	    si->insAfter(&unscheduled);
+	  }
+	} else {
+	  si->safeRemove();
+	  delete si;
 	}
-	prev = s;
       }
-      if (interval != NULL)
-	now = interval->time;
+      if (interval.next != NULL)
+	now = interval.next->time;
     }
-    while (runnables != NULL) {
-      s = runnables;
-      runnables = runnables->next;
-      delete s;
+
+    while (unscheduled.next != NULL) {
+      si = unscheduled.next;
+      si->safeRemove();
+      delete si;
     }
   }
 };
 
 Scheduler scheduler;
 
-void registerOrigin(RxNode *node) {
+void registerScheduled(RxNode *node) {
   scheduler.add(node);
+}
+void unregisterScheduled(RxNode *node) {
+  scheduler.remove(node);
 }
 void scheduleAlways(RxNode *node) {
   scheduler.addAlways(node);

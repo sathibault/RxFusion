@@ -57,6 +57,8 @@ class Scheduled {
     node->schedule = this;
   }
 
+  void clear() { node = NULL; }
+
   void setInterval(unsigned millis) {
     interval.tv_sec = millis / 1000;
     interval.tv_nsec = (millis - interval.tv_sec * 1000) * 1000000;
@@ -150,6 +152,14 @@ class Scheduler {
     schedule(p);
   }
 
+  void remove(RxNode *node) {
+    Scheduled *p = (Scheduled *)(node->schedule);
+    if (p != NULL) {
+      p->remove();
+      p->clear();
+    }
+  }
+
   void run() {
     Scheduled *s, *next;
 
@@ -161,21 +171,31 @@ class Scheduler {
 	for (s = interval.next; s != NULL; s = next) {
 	  if (ISEARLIER(now, s->time)) break;
 	  next = s->next;
-	  s->remove();
-	  if (s->node->run())
-	    schedule(s);
-	  else
-	    s->insAfter(&unscheduled);
+	  if (s->node != NULL) {
+	    s->remove();
+	    if (s->node->run() && s->node != NULL)
+	      schedule(s);
+	    else if (s->node != NULL)
+	      s->insAfter(&unscheduled);
+	    else
+	      delete s;
+	  } else
+	    delete s;
 	}
       }
 
       // Run always
       for (s = always.next; s != NULL; s = next) {
 	next = s->next;
-        if (!s->node->run())
-	  s->remove();
+	if (s->node != NULL) {
+	  if (!s->node->run() && s->node != NULL) {
+	    s->remove();
+	    s->insAfter(&unscheduled);
+	  }
+	} else
+	  delete s;
       }
-
+      
       if (always.next == NULL)
 	if (interval.next != NULL)
 	  waitUntil(interval.next);
@@ -190,8 +210,11 @@ class Scheduler {
 
 Scheduler scheduler;
 
-void registerOrigin(RxNode *node) {
+void registerScheduled(RxNode *node) {
   scheduler.add(node);
+}
+void unregisterScheduled(RxNode *node) {
+  scheduler.remove(node);
 }
 void scheduleAlways(RxNode *node) {
   scheduler.addAlways(node);

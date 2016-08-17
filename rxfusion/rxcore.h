@@ -114,6 +114,7 @@ template <class T> TrafficOp<T> *Traffic(const std::function<Action (T&)>& contr
   return new TrafficOp<T>(control);
 }
 
+
 //////////////////////////////////////// Sliding window components
 
 template <class T, int capacity> class WindowOp : public Operator<T,fifo<T,capacity>> {
@@ -470,6 +471,93 @@ template <class T, class U, class V, class W> class Zipper4 : public Observable<
     }
   }
 };
+
+
+//////////////////////////////////////// Timer operators
+
+template <class T> class SampleOp : public Operator<T,T> {
+ private:
+  T latest;
+  unsigned interval;
+  bool empty,repeat,complete;
+ public:
+  SampleOp(unsigned millis, bool repeat) : interval(millis),repeat(repeat) {
+    empty = true;
+    complete=false;
+  }
+  virtual ~SampleOp() { unregisterScheduled(this); }
+
+  void subscribe(RxNode *node) {
+    if (this->subscribers.empty()) registerScheduled(this);
+    Operator<T,T>::subscribe(node);
+  }
+
+  void init() {
+    scheduleInterval(this, interval);
+  }
+
+  void onData(RxNode *source, void *value) {
+    latest = *(T *)value;
+    empty = false;
+  }
+
+  void onClose(RxNode *source) {
+    this->sources.remove(source);
+    complete = true;
+  }
+
+  bool run() {
+    if (!empty) {
+      this->subscribers.push(this, &latest);
+      empty = !repeat;
+    }
+    if (complete) {
+      this->close();
+      return false;
+    }
+    return true;
+  }
+};
+
+template <class T> SampleOp<T> *Sample(unsigned millis, bool repeat=false) {
+  return new SampleOp<T>(millis, repeat);
+}
+
+template <class T> class DebounceOp : public Operator<T,T> {
+ private:
+  T latest;
+  unsigned timeout;
+  bool complete;
+ public:
+  DebounceOp(unsigned millis) : timeout(millis) {
+    registerScheduled(this);
+    complete=false;
+  }
+  virtual ~DebounceOp() { unregisterScheduled(this); }
+
+  void onData(RxNode *source, void *value) {
+    latest = *(T *)value;
+    scheduleInterval(this, timeout);
+  }
+
+  void onClose(RxNode *source) {
+    this->sources.remove(source);
+    complete = true;
+  }
+
+  bool run() {
+    this->subscribers.push(this, &latest);
+    if (complete) {
+      this->close();
+      return false;
+    }
+    return false;
+  }
+};
+
+template <class T> DebounceOp<T> *Debounce(unsigned millis) {
+  return new DebounceOp<T>(millis);
+}
 
 
 //////////////////////////////////////// Generator/Intermediate components
