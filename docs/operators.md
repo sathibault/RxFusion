@@ -4,7 +4,7 @@ Operators that aggregate or summarize information from multiple items in output 
 
 #### Count
 
-<img align="left" src="cpp.png">
+<img align="left" src="cpp22.png">
 Count&lt;class&gt;()
 <br>
 <img align="left" src="javascript.png">
@@ -14,7 +14,7 @@ For each item received, output the total number of items received since the star
 
 #### WinSum
 
-<img align="left" src="cpp.png">
+<img align="left" src="cpp22.png">
 WinSum&lt;class,width&gt;()
 <br>
 <img align="left" src="javascript.png">
