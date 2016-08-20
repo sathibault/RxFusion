@@ -4,19 +4,21 @@ Operators that aggregate or summarize information from multiple items in output 
 
 #### Count
 
-For each item received, output the total number of items received since the start.
+<img align="left" src="cpp.png">
+Count&lt;class&gt;()
+<br>
+<img align="left" src="javascript.png">
+Count()
 
-<table borders="0" width="100%">
-<tr><td>C++</td><td> Count&lt;class&gt;() </td></tr>
-<tr><td>Javascript</td><td> Count() </td></tr>
-</table>
+For each item received, output the total number of items received since the start.
 
 #### WinSum
 
-Outputs the sum of a `width` size sliding window over the input stream.
+<img align="left" src="cpp.png">
+WinSum&lt;class,width&gt;()
+<br>
+<img align="left" src="javascript.png">
+WinSum(width)
 
-<table borders="0" width="100%">
-<tr><td>C++</td><td> WinSum&lt;class,width&gt;() </td></tr>
-<tr><td>Javascript</td><td> WinSum(width) </td></tr>
-</table>
+Outputs the sum of a `width` size sliding window over the input stream.
 
