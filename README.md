@@ -14,15 +14,7 @@ A Reactive programming framework for IoT from edge to cloud.
 
 ## Roadmap
 
-* 2016 Q2
-  * Concept development
-  * C++ core component development
-  * Proof-of-concept Arduino/ARM
-* 2016 Q3
-  * C++ core components alpha release
-  * JS development
-  * Cloud connection development
-  * PlatformIO integration
+![Roadmap](img/roadmap.png)
 
 ## Javascript Preview
 
