@@ -3,7 +3,7 @@ PROJECT("RxFusion Test")
 SET(CMAKE_CXX_COMPILER g++)
 SET(CMAKE_CXX_FLAGS "-std=c++11")
 CMAKE_POLICY(VERSION 3.2)
-INCLUDE_DIRECTORIES(.. ./googletest/googletest/include)
+INCLUDE_DIRECTORIES(../include ./googletest/googletest/include)
 LINK_DIRECTORIES(./googletest/build/googlemock/gtest)
 
 ENABLE_TESTING()

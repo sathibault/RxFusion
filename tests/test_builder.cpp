@@ -4,7 +4,7 @@
 void fatal(const char *msg) { puts(msg); exit(1); }
 unsigned int epoch_timestamp() { return time(NULL); }
 
-#include "rxfusion/rxfusion.h"
+#include "foundation/rxfusion.h"
 #include "test_scheduler.h"
 
 TEST(BuilderTest, Minimal) {
