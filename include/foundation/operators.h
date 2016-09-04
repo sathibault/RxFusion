@@ -184,6 +184,40 @@ template <class T> const Compound<T,T> MaxOver(unsigned millis) {
   return Compound<T,T>(fold, poll);
 }
 
+
+//////////////////////////////////////// Math
+
+template <class T> Operator<T,T> *Scale(T k) {
+  return new MapOp<T,T>([k](T& x) -> T { return k*x; });
+}
+
+template <class T> Operator<T,T> *Add(T b) {
+  return new MapOp<T,T>([b](T& x) -> T { return x+b; });
+}
+
+template <class T> Operator<T,T> *ClampHigh(T u) {
+  return new MapOp<T,T>([u](T& x) -> T { return x > u ? u : x; });
+}
+
+template <class T> Operator<T,T> *ClampLow(T l) {
+  return new MapOp<T,T>([l](T& x) -> T { return x < l ? l : x; });
+}
+
+template <class T> Operator<T,T> *Clamp(T l, T u) {
+  return new MapOp<T,T>([l,u](T& x) -> T { return x < l ? l : (x > u ? u : x); });
+}
+
+template <class T, class U> Operator<T,U> *Toggle(U initial) {
+  return new ScanOp<T,U>([](T& data, U& state) -> U { return !state; }, initial);
+}
+
+template <class T, class U> Operator<T,U> *Const(U c) {
+  return new MapOp<T,U>([c](T& x) -> T { return c; });
+}
+
+
+//////////////////////////////////////// Filtering
+
 template <class T> const Compound<T,T> Drop(int drop) {
   auto *cnt = Counted<T,int>();
   auto *filter = Filter<Tuple2<T,int>>([drop](Tuple2<T,int>& t) -> bool {
@@ -217,34 +251,6 @@ template <class T> const Compound<T,T> Dedup() {
   filter->attach(scan);
   prj->attach(filter);
   return Compound<T,T>(scan, prj);
-}
-
-template <class T> Operator<T,T> *Scale(T k) {
-  return new MapOp<T,T>([k](T& x) -> T { return k*x; });
-}
-
-template <class T> Operator<T,T> *Add(T b) {
-  return new MapOp<T,T>([b](T& x) -> T { return x+b; });
-}
-
-template <class T> Operator<T,T> *ClampHigh(T u) {
-  return new MapOp<T,T>([u](T& x) -> T { return x > u ? u : x; });
-}
-
-template <class T> Operator<T,T> *ClampLow(T l) {
-  return new MapOp<T,T>([l](T& x) -> T { return x < l ? l : x; });
-}
-
-template <class T> Operator<T,T> *Clamp(T l, T u) {
-  return new MapOp<T,T>([l,u](T& x) -> T { return x < l ? l : (x > u ? u : x); });
-}
-
-template <class T, class U> Operator<T,U> *Toggle(U initial) {
-  return new ScanOp<T,U>([](T& data, U& state) -> U { return !state; }, initial);
-}
-
-template <class T, class U> Operator<T,U> *Const(U c) {
-  return new MapOp<T,U>([c](T& x) -> T { return c; });
 }
 
 Operator<bool,bool> *True() {
@@ -310,4 +316,3 @@ template <class T> Operator<T,bool> *IsNegative() {
 template <class T> Operator<T,bool> *IsZero() {
   return new MapOp<T,bool>([](T& x) -> bool { return x == 0; });
 }
-
