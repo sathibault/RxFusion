@@ -37,6 +37,8 @@ limitations under the License.
 #define MINUTES(x) ((x)*SECONDS(60))
 #define HOURS(x) ((x)*MINUTES(60))
 
+unsigned long millis();
+
 #include "storage.h"
 #include "tuple.h"
 #include "vec.h"

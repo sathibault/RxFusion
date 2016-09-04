@@ -523,37 +523,6 @@ template <class T> SampleOp<T> *Sample(unsigned millis, bool repeat=false) {
   return new SampleOp<T>(millis, repeat);
 }
 
-template <class T> class DedupOp : public Operator<T,T> {
- private:
-  T latest;
-  unsigned timeout;
-  bool empty;
- public:
-  DedupOp(unsigned millis) : timeout(millis) {
-    registerScheduled(this);
-    empty = true;
-  }
-  virtual ~DedupOp() { unregisterScheduled(this); }
-
-  void onData(RxNode *source, void *value) {
-    if (empty || (*(T *)value != latest)) {
-      scheduleInterval(this, timeout);
-      latest = *(T *)value;
-      this->subscribers.push(this, &latest);
-      empty = false;
-    }
-  }
-
-  bool run() {
-    empty = true;
-    return false;
-  }
-};
-
-template <class T> DedupOp<T> *Dedup(unsigned millis) {
-  return new DedupOp<T>(millis);
-}
-
 template <class T> class DebounceOp : public Operator<T,T> {
  private:
   T latest;

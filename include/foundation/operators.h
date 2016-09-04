@@ -253,6 +253,27 @@ template <class T> const Compound<T,T> Dedup() {
   return Compound<T,T>(scan, prj);
 }
 
+
+template <class T> const Compound<T,T> Dedup(unsigned long expire) {
+  // Previous value, timestamp, emit
+  typedef Tuple3<Maybe<T>,unsigned long,bool> DedupState;
+
+  auto *scan = Scan<T,DedupState>([expire](T& cur, DedupState& state) -> DedupState {
+      unsigned long now = millis();
+      unsigned long age = now - state._2; // indepotent to wrapping
+      bool emit = !state._1.exists || cur != state._1.value || age >= expire;
+      unsigned long t = emit ? now : state._2;
+      return DedupState(Maybe<T>(cur),t,emit);
+    }, DedupState(Maybe<T>(),0,false));
+  auto *filter = Filter<DedupState>([](DedupState& x) -> bool {
+      return x._3;
+    });
+  auto *prj = Map<DedupState,T>([](DedupState& x) -> T { return x._1.value; });
+  filter->attach(scan);
+  prj->attach(filter);
+  return Compound<T,T>(scan, prj);
+}
+
 Operator<bool,bool> *True() {
   return new FilterOp<bool>([](bool& x) -> bool { return x; });
 }

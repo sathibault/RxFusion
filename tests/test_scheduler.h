@@ -54,6 +54,8 @@ class Scheduler {
  public:
   Scheduler() { }
 
+  unsigned long millis() { return now; }
+
   void schedule(Scheduled *p) {
     // from previous time rather that now so as to not accumulate error
     p->time += p->interval;
@@ -145,6 +147,10 @@ class Scheduler {
 };
 
 Scheduler scheduler;
+
+unsigned long millis() {
+  return scheduler.millis();
+}
 
 void registerScheduled(RxNode *node) {
   scheduler.add(node);
