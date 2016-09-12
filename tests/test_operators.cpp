@@ -76,6 +76,20 @@ TEST(OperatorTest, Misc) {
   EXPECT_STREQ(out.text(), "0 1 2 3");
   out.clear();
 
+  // 100 1 => 0
+  // 200 2 => 0 drop = t-100
+  // 300 3 => 0 drop = t-200
+  // 400 4 => 0 drop = t-300
+  // 500 5 => 0
+  // 600 6 => 0 drop = t-100
+  // 700 7 => 1 
+  // 800 8 => 1 drop = t-100
+  // 900 9 => 1 drop = t-200
+  // 1000 10 => 1 drop = t-300
+  r >> Iterate<int>(100) >> Map<int,int>([](int x)->int { return x/7; }) >> Dedup<int>(350) >> out;
+  EXPECT_STREQ(out.text(), "0 0 1");
+  out.clear();
+  
   r >> Drop<int>(7) >> out;
   EXPECT_STREQ(out.text(), "8 9 10");
   out.clear();
