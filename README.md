@@ -55,6 +55,10 @@ socket.on('hist', function(data) {
 });
 ```
 
+## Documentation
+
+[Operators](docs/operators-contents.md) [Index](docs/operators-index.md)
+
 ## Building
 
 At this point, this project contains only RxFusion foundation which is
