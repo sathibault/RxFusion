@@ -17,6 +17,7 @@ Operations that output a subset of their input items.
 * [True](operators.md#true) Output only input items equal to true.
 * [False](operators.md#false) Output only input items equal to false.
 * [Filter](operators.md#filter) For each input item, apply the given function and output the input if the function returns true.
+
 ## Transformation
 
 Operations that transforms each input item to produce an output item.
@@ -41,6 +42,7 @@ Operations that transforms each input item to produce an output item.
 * [Counted](operators.md#counted) For each tuple input item, output a tuple with the input item and total number of inputs seen.
 * [Map](operators.md#map) For each tuple input item, apply the given `function` to the input and output the returned value.
 * [Scan](operators.md#scan) The scan operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state as arguments.  The returned value is output and becomes the new state.
+
 ## Aggregation
 
 Operators that aggregate or summarize information from multiple items in output items.
@@ -58,3 +60,4 @@ Operators that aggregate or summarize information from multiple items in output 
 * [WinMax](operators.md#winmax) Outputs the maximum of a `width` size sliding window over the input stream.
 * [MaxOf](operators.md#maxof) Outputs the maximum of each batch of `count` input items.
 * [MaxOver](operators.md#maxover) Outputs the maximum of each batch of input items received over `millis` milliseconds.
+

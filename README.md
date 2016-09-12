@@ -57,7 +57,9 @@ socket.on('hist', function(data) {
 
 ## Documentation
 
-[Operators](docs/operators-contents.md) [Index](docs/operators-index.md)
+[Operators](docs/api-reference.md)
+
+[Operators Index](docs/api-index.md)
 
 ## Building
 
