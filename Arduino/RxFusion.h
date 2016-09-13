@@ -45,3 +45,4 @@ static unsigned serial_baud = 0;
 #include "include/foundation/network.h"
 #include "include/arduino/io.h"
 #include "include/arduino/scheduler.h"
+#include "include/arduino/utils.h"
