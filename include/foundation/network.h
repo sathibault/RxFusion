@@ -31,35 +31,47 @@ class HttpPost : public Consumer<xstring> {
 
   void readResponse() {
     unsigned bytes = 0;
-    unsigned long endTime = millis() + 25000;
+    unsigned long startTime = millis();
 
     do {
       if (client.available()) {
 	while (client.available()) {
 	  char c = client.read();
+#if DBG_NET >= 2
 	  Serial.write(c);
+#endif
 	  bytes++;
 	}
 	break;
       }
-    } while (millis() < endTime);
+    } while ((millis()-startTime) < 25000);
     client.stop();
+#if DBG_NET >= 2
     if (bytes > 0)
       Serial.println();
-    else
+#endif
+#if DBG_NET > 0
+    if (bytes > 0) {
+      Serial.print(millis()-startTime);
+      Serial.println(" ms");
+    } else
       Serial.println("HTTP client timeout.");
-  }
+#endif
+}
 
  public:
   HttpPost(TRANSPORT_BASE& client, const char *host, short port, const char *path, uint8_t headerc, const char **headers) : client(client), host(host), path(path), port(port), headerc(headerc), headers(headers), sbuf(1024) {
   }
   void onData(RxNode *publisher, void *value) {
-    IPAddress remote_addr = IPAddress(54,164,253,124);
-    Serial.println(host);
-    Serial.println(port);
-    //    if (!WiFi.hostByName(host, remote_addr))
-    //      Serial.println("Can't resolve IP addr");
-    if (client.connect(remote_addr, port)) {
+#if DBG_NET > 0
+    Serial.print("POST ");
+    Serial.print(host);
+    Serial.print(':');
+    Serial.print(port);
+    Serial.print(path);
+    Serial.print(' ');
+#endif
+    if (client.connect(host, port)) {
       sbuf.reset();
       ((xstring *)value)->writeto(sbuf);
 
@@ -118,7 +130,17 @@ class MqttPub : public Consumer<xstring> {
   bool connect() {
     uint8_t res[2];
 
+#if DBG_NET > 0
+    Serial.print("MQTT connect ");
+    Serial.print(host);
+    Serial.print(' ');
+    Serial.print(port);
+    Serial.print(' ');
+#endif
     if (!trans.connect(host, port)) {
+#if DBG_NET > 0
+      Serial.println("failed - timeout.");
+#endif
       sbuf.reset("Failed to connect ");
       sbuf.append(host);
       sbuf.append(" ");
@@ -132,25 +154,42 @@ class MqttPub : public Consumer<xstring> {
 
     // RESPONSE
     if (readBytes(res, 2) != 2) { // FIXED HEADER
+#if DBG_NET > 0
+      Serial.println("failed - no response.");
+#endif
       error.push("MQTT connect error: no response");
       goto mqtterror;
     }
     if (res[0] != 0x20 || res[1] != 0x02) { // CONNACK, length 2
+#if DBG_NET > 0
+      Serial.println("failed - invalid response.");
+#endif
       sbuf.reset("MQTT connect error: unexpected reponse ");
       sbuf.append(res[0]);
       error.push(sbuf.c_str());
       goto mqtterror;
     }
     if (readBytes(res, 2) != 2) { // VARIABLE HEADER
+#if DBG_NET > 0
+      Serial.println("failed - incomplete response.");
+#endif
       error.push("MQTT connect error: incomplete response");
       goto mqtterror;
     }
     if (res[0] != 0x00 || res[1] != 0x00) { // SP, code
+#if DBG_NET > 0
+      Serial.print("failed - error code=");
+      Serial.println(res[1]);
+#endif
       sbuf.reset("MQTT connect error: code ");
       sbuf.append(res[1]);
       error.push(sbuf.c_str());
       goto mqtterror;
     }
+
+#if DBG_NET > 0
+    Serial.println("connected.");
+#endif
 
     return true;
 
@@ -173,7 +212,10 @@ class MqttPub : public Consumer<xstring> {
       ((xstring *)value)->writeto(sbuf);
       pkt.makePub(topic, sbuf.c_str());
       trans.write(pkt.data(), pkt.length());
-      //Serial.println("sent pub");
+#if DBG_NET > 0
+      Serial.print("MQTT published ");
+      Serial.println(sbuf.c_str());
+#endif
     }
   }
 };

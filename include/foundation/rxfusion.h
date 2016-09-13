@@ -37,6 +37,10 @@ limitations under the License.
 #define MINUTES(x) ((x)*SECONDS(60))
 #define HOURS(x) ((x)*MINUTES(60))
 
+#ifndef DBG_NET
+#define DBG_NET 0
+#endif
+
 unsigned long millis();
 
 #include "storage.h"
