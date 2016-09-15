@@ -4,7 +4,7 @@ Operations that output a subset of their input items.
 
 ### Drop
 
-<img src="img/Drop_diag.png">
+![Drop](img/Drop_diag.png)
 
 <img align="left" src="img/cpp.png">
 Drop&lt;*type*&gt;(*n*)
@@ -16,7 +16,7 @@ Output all input items except the first `n`
 
 ### Take
 
-<img src="img/Take_diag.png">
+![Take](img/Take_diag.png)
 
 <img align="left" src="img/cpp.png">
 Take&lt;*type*&gt;(*n*)
@@ -28,7 +28,7 @@ Output only the first `n` input items.
 
 ### Dedup
 
-<img src="img/Dedup_diag.png">
+![Dedup](img/Dedup_diag.png)
 
 <img align="left" src="img/cpp.png">
 Dedup&lt;*type*&gt;()
@@ -40,7 +40,7 @@ Output every input item that is not equal to the previous input item.
 
 ### Dedup (expiring)
 
-<img src="img/Dedup (expiring)_diag.png">
+![Dedup (expiring)](img/Dedup (expiring)_diag.png)
 
 <img align="left" src="img/cpp.png">
 Dedup (expiring)&lt;*type*&gt;()
@@ -52,7 +52,7 @@ Output the input item if it is not equal to the previous input or it has been mo
 
 ### Debounce
 
-<img src="img/Debounce_diag.png">
+![Debounce](img/Debounce_diag.png)
 
 <img align="left" src="img/cpp.png">
 Debounce&lt;*type*&gt;(*millis*)
@@ -64,7 +64,7 @@ Outputs each input after `millis` milliseconds if no other input has been receiv
 
 ### Sample
 
-<img src="img/Sample_diag.png">
+![Sample](img/Sample_diag.png)
 
 <img align="left" src="img/cpp.png">
 Sample&lt;*type*&gt;(*millis*)
@@ -76,7 +76,7 @@ Generates a stream of values with the latest value from its input stream every `
 
 ### Over
 
-<img src="img/Over_diag.png">
+![Over](img/Over_diag.png)
 
 <img align="left" src="img/cpp.png">
 Over&lt;*type*&gt;(*threshold*)
@@ -88,7 +88,7 @@ Output only input items greater than `threshold`.
 
 ### Under
 
-<img src="img/Under_diag.png">
+![Under](img/Under_diag.png)
 
 <img align="left" src="img/cpp.png">
 Under&lt;*type*&gt;(*threshold*)
@@ -100,7 +100,7 @@ Output only input items less than `threshold`.
 
 ### AtLeast
 
-<img src="img/AtLeast_diag.png">
+![AtLeast](img/AtLeast_diag.png)
 
 <img align="left" src="img/cpp.png">
 AtLeast&lt;*type*&gt;(*threshold*)
@@ -112,7 +112,7 @@ Output only input items greater than or equal to `threshold`.
 
 ### AtMost
 
-<img src="img/AtMost_diag.png">
+![AtMost](img/AtMost_diag.png)
 
 <img align="left" src="img/cpp.png">
 AtMost&lt;*type*&gt;(*threshold*)
@@ -124,7 +124,7 @@ Output only input items less than or equal to `threshold`.
 
 ### Positive
 
-<img src="img/Positive_diag.png">
+![Positive](img/Positive_diag.png)
 
 <img align="left" src="img/cpp.png">
 Positive&lt;*type*&gt;()
@@ -136,7 +136,7 @@ Output only input items that are greater than 0.
 
 ### Negative
 
-<img src="img/Negative_diag.png">
+![Negative](img/Negative_diag.png)
 
 <img align="left" src="img/cpp.png">
 Negative&lt;*type*&gt;()
@@ -148,7 +148,7 @@ Output only input items that are less than 0.
 
 ### Zero
 
-<img src="img/Zero_diag.png">
+![Zero](img/Zero_diag.png)
 
 <img align="left" src="img/cpp.png">
 Zero&lt;*type*&gt;()
@@ -160,7 +160,7 @@ Output only input items that are less than 0.
 
 ### True
 
-<img src="img/True_diag.png">
+![True](img/True_diag.png)
 
 <img align="left" src="img/cpp.png">
 True&lt;*type*&gt;()
@@ -172,7 +172,7 @@ Output only input items equal to true.
 
 ### False
 
-<img src="img/False_diag.png">
+![False](img/False_diag.png)
 
 <img align="left" src="img/cpp.png">
 False&lt;*type*&gt;()
@@ -184,7 +184,7 @@ Output only input items equal to false.
 
 ### Filter
 
-<img src="img/Filter_diag.png">
+![Filter](img/Filter_diag.png)
 
 <img align="left" src="img/cpp.png">
 Filter&lt;*type*&gt;(*function*)
@@ -200,7 +200,7 @@ Operations that transforms each input item to produce an output item.
 
 ### Const
 
-<img src="img/Const_diag.png">
+![Const](img/Const_diag.png)
 
 <img align="left" src="img/cpp.png">
 Const&lt;*type*&gt;(*value*)
@@ -212,7 +212,7 @@ For each input item, output `value`.
 
 ### Scale
 
-<img src="img/Scale_diag.png">
+![Scale](img/Scale_diag.png)
 
 <img align="left" src="img/cpp.png">
 Scale&lt;*type*&gt;(*k*)
@@ -224,7 +224,7 @@ For each input item, output `k` __×__ input value.
 
 ### Add
 
-<img src="img/Add_diag.png">
+![Add](img/Add_diag.png)
 
 <img align="left" src="img/cpp.png">
 Add&lt;*type*&gt;(*b*)
@@ -236,7 +236,7 @@ For each input item, output `b` __+__ input value.
 
 ### Clamp
 
-<img src="img/Clamp_diag.png">
+![Clamp](img/Clamp_diag.png)
 
 <img align="left" src="img/cpp.png">
 Clamp&lt;*type*&gt;(*lo*, *hi*)
@@ -248,7 +248,7 @@ For each input item, output `lo` if the input is less than `lo`, `hi` if the inp
 
 ### ClampLow
 
-<img src="img/ClampLow_diag.png">
+![ClampLow](img/ClampLow_diag.png)
 
 <img align="left" src="img/cpp.png">
 ClampLow&lt;*type*&gt;(*lo*)
@@ -260,7 +260,7 @@ For each input item, output the maximum of the input value or `lo`.
 
 ### ClampHigh
 
-<img src="img/ClampHigh_diag.png">
+![ClampHigh](img/ClampHigh_diag.png)
 
 <img align="left" src="img/cpp.png">
 ClampHigh&lt;*type*&gt;(*hi*)
@@ -272,7 +272,7 @@ For each input item, output the minimum of the input value or `hi`.
 
 ### IsOver
 
-<img src="img/IsOver_diag.png">
+![IsOver](img/IsOver_diag.png)
 
 <img align="left" src="img/cpp.png">
 IsOver&lt;*type*&gt;(*threshold*)
@@ -284,7 +284,7 @@ Output true for each input item greater than `threshold` otherwise false.
 
 ### IsUnder
 
-<img src="img/IsUnder_diag.png">
+![IsUnder](img/IsUnder_diag.png)
 
 <img align="left" src="img/cpp.png">
 IsUnder&lt;*type*&gt;(*threshold*)
@@ -296,7 +296,7 @@ Output true for each input item less than `threshold` otherwise false.
 
 ### IsAtLeast
 
-<img src="img/IsAtLeast_diag.png">
+![IsAtLeast](img/IsAtLeast_diag.png)
 
 <img align="left" src="img/cpp.png">
 IsAtLeast&lt;*type*&gt;(*threshold*)
@@ -308,7 +308,7 @@ Output true for each input item greater than or equal to `threshold` otherwise f
 
 ### IsAtMost
 
-<img src="img/IsAtMost_diag.png">
+![IsAtMost](img/IsAtMost_diag.png)
 
 <img align="left" src="img/cpp.png">
 IsAtMost&lt;*type*&gt;(*threshold*)
@@ -320,7 +320,7 @@ Output true for each input item less than or equal to `threshold` otherwise fals
 
 ### IsPositive
 
-<img src="img/IsPositive_diag.png">
+![IsPositive](img/IsPositive_diag.png)
 
 <img align="left" src="img/cpp.png">
 IsPositive&lt;*type*&gt;()
@@ -332,7 +332,7 @@ Output true for each input item that is greater than 0 otherwise false.
 
 ### IsNegative
 
-<img src="img/IsNegative_diag.png">
+![IsNegative](img/IsNegative_diag.png)
 
 <img align="left" src="img/cpp.png">
 IsNegative&lt;*type*&gt;()
@@ -344,7 +344,7 @@ Output true for each input item that is less than 0 otherwise false.
 
 ### IsZero
 
-<img src="img/IsZero_diag.png">
+![IsZero](img/IsZero_diag.png)
 
 <img align="left" src="img/cpp.png">
 IsZero&lt;*type*&gt;()
@@ -356,7 +356,7 @@ Output true for each input item that is less than 0 otherwise false.
 
 ### Toggle
 
-<img src="img/Toggle_diag.png">
+![Toggle](img/Toggle_diag.png)
 
 <img align="left" src="img/cpp.png">
 Toggle&lt;*in-type*,*out-type*&gt;(*initial*)
@@ -368,7 +368,7 @@ On the first input, output __!__ `initial` and thereafter output __!__ previous 
 
 ### Project1
 
-<img src="img/Project1_diag.png">
+![Project1](img/Project1_diag.png)
 
 <img align="left" src="img/cpp.png">
 Project1&lt;*type*&gt;()
@@ -380,7 +380,7 @@ For each tuple input item, output the 1st element of the tuple
 
 ### Project2
 
-<img src="img/Project2_diag.png">
+![Project2](img/Project2_diag.png)
 
 <img align="left" src="img/cpp.png">
 Project2&lt;*type*&gt;()
@@ -392,7 +392,7 @@ For each tuple input item, output the 2nd element of the tuple
 
 ### Project3
 
-<img src="img/Project3_diag.png">
+![Project3](img/Project3_diag.png)
 
 <img align="left" src="img/cpp.png">
 Project3&lt;*type*&gt;()
@@ -404,7 +404,7 @@ For each tuple input item, output the 3rd element of the tuple
 
 ### Counted
 
-<img src="img/Counted_diag.png">
+![Counted](img/Counted_diag.png)
 
 <img align="left" src="img/cpp.png">
 Counted&lt;*in-type*,*counter-type*&gt;()
@@ -416,7 +416,7 @@ For each tuple input item, output a tuple with the input item and total number o
 
 ### Map
 
-<img src="img/Map_diag.png">
+![Map](img/Map_diag.png)
 
 <img align="left" src="img/cpp.png">
 Map&lt;*in-type*,*out-type*&gt;(*function*)
@@ -428,7 +428,7 @@ For each tuple input item, apply the given `function` to the input and output th
 
 ### Scan
 
-<img src="img/Scan_diag.png">
+![Scan](img/Scan_diag.png)
 
 <img align="left" src="img/cpp.png">
 Scan&lt;*in-type*,*state-type*&gt;(*function*, *init*)
@@ -444,7 +444,7 @@ Operators that aggregate or summarize information from multiple items in output 
 
 ### Count
 
-<img src="img/Count_diag.png">
+![Count](img/Count_diag.png)
 
 <img align="left" src="img/cpp.png">
 Count&lt;*type*&gt;()
@@ -456,7 +456,7 @@ For each item received, output the total number of items received since the star
 
 ### WinSum
 
-<img src="img/WinSum_diag.png">
+![WinSum](img/WinSum_diag.png)
 
 <img align="left" src="img/cpp.png">
 WinSum&lt;*type*,*width*&gt;()
@@ -468,7 +468,7 @@ Outputs the sum of a `width` size sliding window over the input stream.
 
 ### SumOf
 
-<img src="img/SumOf_diag.png">
+![SumOf](img/SumOf_diag.png)
 
 <img align="left" src="img/cpp.png">
 SumOf&lt;*type*,*count*&gt;()
@@ -480,7 +480,7 @@ Outputs the sum of each batch of `count` input items.
 
 ### SumOver
 
-<img src="img/SumOver_diag.png">
+![SumOver](img/SumOver_diag.png)
 
 <img align="left" src="img/cpp.png">
 SumOver&lt;*type*&gt;(*millis*)
@@ -492,7 +492,7 @@ Outputs the sum of each batch of input items received over `millis` milliseconds
 
 ### WinAverage
 
-<img src="img/WinAverage_diag.png">
+![WinAverage](img/WinAverage_diag.png)
 
 <img align="left" src="img/cpp.png">
 WinAverage&lt;*type*,*width*&gt;()
@@ -504,7 +504,7 @@ Outputs the average of a `width` size sliding window over the input stream.
 
 ### AverageOf
 
-<img src="img/AverageOf_diag.png">
+![AverageOf](img/AverageOf_diag.png)
 
 <img align="left" src="img/cpp.png">
 AverageOf&lt;*type*,*count*&gt;()
@@ -516,7 +516,7 @@ Outputs the average of each batch of `count` input items.
 
 ### AverageOver
 
-<img src="img/AverageOver_diag.png">
+![AverageOver](img/AverageOver_diag.png)
 
 <img align="left" src="img/cpp.png">
 AverageOver&lt;*type*&gt;(*millis*)
@@ -528,7 +528,7 @@ Outputs the average of each batch of input items received over `millis` millisec
 
 ### WinMin
 
-<img src="img/WinMin_diag.png">
+![WinMin](img/WinMin_diag.png)
 
 <img align="left" src="img/cpp.png">
 WinMin&lt;*type*,*width*&gt;()
@@ -540,7 +540,7 @@ Outputs the minimum of a `width` size sliding window over the input stream.
 
 ### MinOf
 
-<img src="img/MinOf_diag.png">
+![MinOf](img/MinOf_diag.png)
 
 <img align="left" src="img/cpp.png">
 MinOf&lt;*type*,*count*&gt;()
@@ -552,7 +552,7 @@ Outputs the minimum of each batch of `count` input items.
 
 ### MinOver
 
-<img src="img/MinOver_diag.png">
+![MinOver](img/MinOver_diag.png)
 
 <img align="left" src="img/cpp.png">
 MinOver&lt;*type*&gt;(*millis*)
@@ -564,7 +564,7 @@ Outputs the minimum of each batch of input items received over `millis` millisec
 
 ### WinMax
 
-<img src="img/WinMax_diag.png">
+![WinMax](img/WinMax_diag.png)
 
 <img align="left" src="img/cpp.png">
 WinMax&lt;*type*,*width*&gt;()
@@ -576,7 +576,7 @@ Outputs the maximum of a `width` size sliding window over the input stream.
 
 ### MaxOf
 
-<img src="img/MaxOf_diag.png">
+![MaxOf](img/MaxOf_diag.png)
 
 <img align="left" src="img/cpp.png">
 MaxOf&lt;*type*,*count*&gt;()
@@ -588,7 +588,7 @@ Outputs the maximum of each batch of `count` input items.
 
 ### MaxOver
 
-<img src="img/MaxOver_diag.png">
+![MaxOver](img/MaxOver_diag.png)
 
 <img align="left" src="img/cpp.png">
 MaxOver&lt;*type*&gt;(*millis*)
