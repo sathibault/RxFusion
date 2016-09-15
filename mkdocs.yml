@@ -1,0 +1,9 @@
+site_name: RxFusion
+pages:
+  - Arduino: arduino.md
+  - API Summary: api-reference.md
+  - API Reference:
+    - Methods: methods.md
+    - Classes: classes.md
+    - Operators: operators.md
+repo_url: https://github.com/sathibault/RxFusion.git
