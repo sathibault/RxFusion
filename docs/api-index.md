@@ -2,7 +2,7 @@
 
 Operations that output a subset of their input items.
 
-[Drop](operators.md#drop) – [Take](operators.md#take) – [Dedup](operators.md#dedup) – [Dedup (expiring)](operators.md#dedup-expiring) – [Debounce](operators.md#debounce) – [Over](operators.md#over) – [Under](operators.md#under) – [AtLeast](operators.md#atleast) – [AtMost](operators.md#atmost) – [Positive](operators.md#positive) – [Negative](operators.md#negative) – [Zero](operators.md#zero) – [True](operators.md#true) – [False](operators.md#false) – [Filter](operators.md#filter)
+[Drop](operators.md#drop) – [Take](operators.md#take) – [Dedup](operators.md#dedup) – [Dedup (expiring)](operators.md#dedup-expiring) – [Debounce](operators.md#debounce) – [Sample](operators.md#sample) – [Over](operators.md#over) – [Under](operators.md#under) – [AtLeast](operators.md#atleast) – [AtMost](operators.md#atmost) – [Positive](operators.md#positive) – [Negative](operators.md#negative) – [Zero](operators.md#zero) – [True](operators.md#true) – [False](operators.md#false) – [Filter](operators.md#filter)
 
 ## Transformation
 
@@ -15,4 +15,26 @@ Operations that transforms each input item to produce an output item.
 Operators that aggregate or summarize information from multiple items in output items.
 
 [Count](operators.md#count) – [WinSum](operators.md#winsum) – [SumOf](operators.md#sumof) – [SumOver](operators.md#sumover) – [WinAverage](operators.md#winaverage) – [AverageOf](operators.md#averageof) – [AverageOver](operators.md#averageover) – [WinMin](operators.md#winmin) – [MinOf](operators.md#minof) – [MinOver](operators.md#minover) – [WinMax](operators.md#winmax) – [MaxOf](operators.md#maxof) – [MaxOver](operators.md#maxover)
+
+## Miscellaneous
+
+[Range](operators.md#range) – [Iterate](operators.md#iterate) – [Poll](operators.md#poll) – [Format](operators.md#format)
+
+## Inputs
+
+Classes that receive or sample input data
+
+[AnalogIn](classes.md#analogin) – [BitIn](classes.md#bitin)
+
+## Outputs
+
+Classes that send or output data
+
+[AnalogOut](classes.md#analogout) – [BitOut](classes.md#bitout) – [Console](classes.md#console) – [HttpPost](classes.md#httppost) – [MqttPub](classes.md#mqttpub)
+
+## configuration
+
+Functions for device/system configuration.
+
+[ConnectWifi](classes.md#connectwifi) – [NetworkTime](classes.md#networktime) – [Sleepy](classes.md#sleepy)
 

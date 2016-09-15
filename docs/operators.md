@@ -62,6 +62,18 @@ Debounce(*millis*)
 
 Outputs each input after `millis` milliseconds if no other input has been received.
 
+### Sample
+
+<img src="img/Sample_diag.png">
+
+<img align="left" src="img/cpp.png">
+Sample&lt;*type*&gt;(*millis*)
+<br>
+<img align="left" src="img/javascript.png">
+Sample(*millis*)
+
+Generates a stream of values with the latest value from its input stream every `millis` milliseconds.
+
 ### Over
 
 <img src="img/Over_diag.png">
@@ -227,10 +239,10 @@ For each input item, output `b` __+__ input value.
 <img src="img/Clamp_diag.png">
 
 <img align="left" src="img/cpp.png">
-Clamp&lt;*type*&gt;(*lo*,*hi*)
+Clamp&lt;*type*&gt;(*lo*, *hi*)
 <br>
 <img align="left" src="img/javascript.png">
-Clamp(*lo*,*hi*)
+Clamp(*lo*, *hi*)
 
 For each input item, output `lo` if the input is less than `lo`, `hi` if the input more than `hi`, or the input value if it is between `lo` and `hi`.
 
@@ -419,10 +431,10 @@ For each tuple input item, apply the given `function` to the input and output th
 <img src="img/Scan_diag.png">
 
 <img align="left" src="img/cpp.png">
-Scan&lt;*in-type*,*state-type*&gt;(*function*,*init*)
+Scan&lt;*in-type*,*state-type*&gt;(*function*, *init*)
 <br>
 <img align="left" src="img/javascript.png">
-Scan(*function*,*init*)
+Scan(*function*, *init*)
 
 The scan operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state as arguments.  The returned value is output and becomes the new state.
 
@@ -585,4 +597,46 @@ MaxOver&lt;*type*&gt;(*millis*)
 MaxOver(*millis*)
 
 Outputs the maximum of each batch of input items received over `millis` milliseconds.
+
+## Miscellaneous
+
+### Range
+
+<img align="left" src="img/cpp.png">
+Range&lt;*type*&gt;(*from*, *to*, *increment*)
+<br>
+<img align="left" src="img/javascript.png">
+Range(*from*, *to*, *increment*)
+
+Generates integers in the range `from` to `to` by `increment`.  The increment is optional and defaults to 1.  Combine with `Iterate` to generate a stream.
+
+### Iterate
+
+<img align="left" src="img/cpp.png">
+Iterate&lt;*type*&gt;(*millis*, *repeat*)
+<br>
+<img align="left" src="img/javascript.png">
+Iterate(*millis*, *repeat*)
+
+Generates a stream of values from a generator (e.g. `Range`).  The values are generated one every `millis` milliseconds.  If `repeat` is true then the iterater will start over with the 1st value after it reaches the last.  The millis and repeat parameters are optional with defaults 0 and false respectively.
+
+### Poll
+
+<img align="left" src="img/cpp.png">
+Poll&lt;*type*&gt;(*millis*)
+<br>
+<img align="left" src="img/javascript.png">
+Poll(*millis*)
+
+Generates a stream of values from an input by polling the current value every `millis` milliseconds.
+
+### Format
+
+<img align="left" src="img/cpp.png">
+Format&lt;*type*&gt;(*format*)
+<br>
+<img align="left" src="img/javascript.png">
+Format(*format*)
+
+Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
 
