@@ -30,7 +30,7 @@ AnalogOut<int> led(6)
 
 The `Range` class generates integers within some range.  The `AnalogOut` class drives a PWM ping, in this case pin 6.
 
-See [Classes](api-reference.md#classes) for a complete list of input/output classes.  Application setup methods are documented in [Methods](api-reference#methods).
+See [Classes](api-reference.md#classes) for a complete list of input/output classes.  Application setup methods are documented in [Methods](api-reference.md#methods).
 
 **Part 3 - Main function**
 

@@ -92,11 +92,11 @@ Classes that send or output data
 
 # Methods
 
-## configuration
+## Configuration
 
 Functions for device/system configuration.
 
-* [ConnectWifi](classes.md#connectwifi) Connect to a WiFi access point with the given `ssid` and `password`.
-* [NetworkTime](classes.md#networktime) Set the date/time using an Internet time server with the given `transport` (e.g. a `WiFiClient`)
-* [Sleepy](classes.md#sleepy) Enable automatic sleep mode when idle.
+* [ConnectWifi](methods.md#connectwifi) Connect to a WiFi access point with the given `ssid` and `password`.
+* [NetworkTime](methods.md#networktime) Set the date/time using an Internet time server with the given `transport` (e.g. a `WiFiClient`)
+* [Sleepy](methods.md#sleepy) Enable automatic sleep mode when idle.
 

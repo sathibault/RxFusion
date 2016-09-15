@@ -1,4 +1,4 @@
-## configuration
+## Configuration
 
 Functions for device/system configuration.
 

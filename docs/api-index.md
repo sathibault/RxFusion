@@ -32,9 +32,9 @@ Classes that send or output data
 
 [AnalogOut](classes.md#analogout) – [BitOut](classes.md#bitout) – [Console](classes.md#console) – [HttpPost](classes.md#httppost) – [MqttPub](classes.md#mqttpub)
 
-## configuration
+## Configuration
 
 Functions for device/system configuration.
 
-[ConnectWifi](classes.md#connectwifi) – [NetworkTime](classes.md#networktime) – [Sleepy](classes.md#sleepy)
+[ConnectWifi](methods.md#connectwifi) – [NetworkTime](methods.md#networktime) – [Sleepy](methods.md#sleepy)
 
