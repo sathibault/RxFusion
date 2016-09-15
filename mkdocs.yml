@@ -1,5 +1,6 @@
 site_name: RxFusion
 pages:
+  - Home: index.md
   - Arduino: arduino.md
   - API Summary: api-reference.md
   - API Reference:
@@ -7,3 +8,4 @@ pages:
     - Classes: classes.md
     - Operators: operators.md
 repo_url: https://github.com/sathibault/RxFusion.git
+theme: readthedocs
