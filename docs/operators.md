@@ -43,10 +43,10 @@ Output every input item that is not equal to the previous input item.
 ![Dedup (expiring)](img/Dedup (expiring)_diag.png)
 
 <img align="left" src="../img/cpp.png">
-Dedup (expiring)&lt;*type*&gt;()
+Dedup&lt;*type*&gt;()
 <br>
 <img align="left" src="../img/javascript.png">
-Dedup (expiring)()
+Dedup()
 
 Output the input item if it is not equal to the previous input or it has been more than `milli` milliseconds since the last output.
 
