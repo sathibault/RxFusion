@@ -40,7 +40,7 @@ Output every input item that is not equal to the previous input item.
 
 ### Dedup (expiring)
 
-![Dedup (expiring)](img/Dedup (expiring)_diag.png)
+![Dedup (expiring)](img/Dedup-expiring_diag.png)
 
 <img align="left" src="../img/cpp.png">
 Dedup&lt;*type*&gt;()
