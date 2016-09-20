@@ -1,6 +1,11 @@
 # RxFusion for Arduino
 
-RxFusion currently supports the Arduino Zero and MKR1000.
+RxFusion currently supports the **Arduino Zero** and **MKR1000**.
+
+## Installation
+
+1. Download the RxFusion-Arduino-vx.y.x.zip from the [latest release](https://github.com/sathibault/RxFusion/releases)
+2. From Arduino IDE menu select Sketch -> Include library -> Add .ZIP library and select the downloaded file.
 
 ## Tutorial
 

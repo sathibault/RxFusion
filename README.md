@@ -2,6 +2,12 @@
 
 A Reactive programming framework for IoT from edge to cloud.
 
+## First public release!
+
+RxFusion v0.0.2 for Arduino is now available:
+
+* Visit the [Documentation](http://rxfusion.readthedocs.io/en/latest/arduino/) for installation and API usage.
+
 ## Project goals
 
 * Lightweight reactive C++ extensions for embedded devices
