@@ -202,7 +202,7 @@ class MqttPub : public Consumer<xstring> {
  public:
   EmbeddedOrigin<const char *> error;
 
-  MqttPub(TRANSPORT_BASE& trans, const char *host, short port, const char *clientId, const char *user, const char *password, const char *topic, unsigned short keepAlive=0x40) : trans(trans), host(host), port(port), clientId(clientId), user(user), password(password), topic(topic), keepAlive(keepAlive), sbuf(64) { connected = false; }
+  MqttPub(TRANSPORT_BASE& trans, const char *host, short port, const char *topic, const char *clientId, const char *user=NULL, const char *password=NULL, unsigned short keepAlive=0x40) : trans(trans), host(host), port(port), clientId(clientId), user(user), password(password), topic(topic), keepAlive(keepAlive), sbuf(64) { connected = false; }
 
   void onData(RxNode *publisher, void *value) {
     if (!connected)

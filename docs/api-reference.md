@@ -1,3 +1,5 @@
+# Operators
+
 ## Filtering
 
 Operations that output a subset of their input items.
@@ -7,6 +9,7 @@ Operations that output a subset of their input items.
 * [Dedup](operators.md#dedup) Output every input item that is not equal to the previous input item.
 * [Dedup (expiring)](operators.md#dedup-expiring) Output the input item if it is not equal to the previous input or it has been more than `milli` milliseconds since the last output.
 * [Debounce](operators.md#debounce) Outputs each input after `millis` milliseconds if no other input has been received.
+* [Sample](operators.md#sample) Generates a stream of values with the latest value from its input stream every `millis` milliseconds.
 * [Over](operators.md#over) Output only input items greater than `threshold`.
 * [Under](operators.md#under) Output only input items less than `threshold`.
 * [AtLeast](operators.md#atleast) Output only input items greater than or equal to `threshold`.
@@ -60,4 +63,40 @@ Operators that aggregate or summarize information from multiple items in output 
 * [WinMax](operators.md#winmax) Outputs the maximum of a `width` size sliding window over the input stream.
 * [MaxOf](operators.md#maxof) Outputs the maximum of each batch of `count` input items.
 * [MaxOver](operators.md#maxover) Outputs the maximum of each batch of input items received over `millis` milliseconds.
+
+## Miscellaneous
+
+* [Range](operators.md#range) Generates integers in the range `from` to `to` by `increment`.  The increment is optional and defaults to 1.  Combine with `Iterate` to generate a stream.
+* [Iterate](operators.md#iterate) Generates a stream of values from a generator (e.g. `Range`).  The values are generated one every `millis` milliseconds.  If `repeat` is true then the iterater will start over with the 1st value after it reaches the last.  The millis and repeat parameters are optional with defaults 0 and false respectively.
+* [Poll](operators.md#poll) Generates a stream of values from an input by polling the current value every `millis` milliseconds.
+* [Format](operators.md#format) Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
+
+# Classes
+
+## Inputs
+
+Classes that receive or sample input data
+
+* [AnalogIn](classes.md#analogin) Reads analog values from an ADC `pin`.
+* [BitIn](classes.md#bitin) Reads values from a digital `pin`.
+
+## Outputs
+
+Classes that send or output data
+
+* [AnalogOut](classes.md#analogout) Writes values to a PWM `pin`.
+* [BitOut](classes.md#bitout) Writes values to a digital `pin`.
+* [Console](classes.md#console) *C++:* Writes value to the serial output at the given `baud`.  *Javascript:* Writes value to the console.
+* [HttpPost](classes.md#httppost) Sends data to an HTTP endpoint using the HTTP POST method using transport (e.g. an instance of WiFiClient).  Optional headers are provided as n array of strings.
+* [MqttPub](classes.md#mqttpub) Publishs data to an MQTT endpoint with QOS 0.  The username, password, and keepAlive parameters are optional.
+
+# Methods
+
+## Configuration
+
+Functions for device/system configuration.
+
+* [ConnectWifi](methods.md#connectwifi) Connect to a WiFi access point with the given `ssid` and `password`.
+* [NetworkTime](methods.md#networktime) Set the date/time using an Internet time server with the given `transport` (e.g. a `WiFiClient`)
+* [Sleepy](methods.md#sleepy) Enable automatic sleep mode when idle.
 

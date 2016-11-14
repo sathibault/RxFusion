@@ -8,4 +8,4 @@ RxFusion.zip:
 	cp -r ../include release/src
 	cp RxFusion.h release/src
 	cp library.properties release
-	cd release; zip -r ../RxFusion.zip *
+	cd release; zip -r ../RxFusion.zip * --exclude '*~'
