@@ -66,6 +66,10 @@ TEST(OperatorTest, Timed) {
 
   ((ra >> Iterate<int>(100)) + (rb >> Iterate<int>(80))) >> Debounce<int>(30) >> out;
   EXPECT_STREQ(out.text(), "1 6 2 7 8");
+  out.clear();
+
+  ((ra >> Iterate<int>(100)) + (rb >> Iterate<int>(80))) >> Throttle<int>(150) >> out;
+  EXPECT_STREQ(out.text(), "5 6 3");
 }
 
 TEST(OperatorTest, Misc) {
@@ -74,6 +78,17 @@ TEST(OperatorTest, Misc) {
 
   r >> Map<int,int>([](int x)->int { return x/3; }) >> Dedup<int>() >> out;
   EXPECT_STREQ(out.text(), "0 1 2 3");
+  out.clear();
+
+  // inputs: 1 2 3 4  5  6  7  8  9  10
+  // state:  1 3 6 10 15 21 28 36 45 55
+  // result:     3 5        14 18
+  r >> Build<int,int, int>([](int& value, int& state, int& result)->bool {
+      state += value;
+      result = state >> 1;
+      return (state & 1) == 0;
+    }, 0) >> out;
+  EXPECT_STREQ(out.text(), "3 5 14 18");
   out.clear();
 
   // 100 1 => 0
