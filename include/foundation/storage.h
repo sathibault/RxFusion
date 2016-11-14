@@ -76,7 +76,7 @@ class strbuf {
   }
 
  public:
-  strbuf(int block) {
+  strbuf(int block=80) {
     blockSize = block;
     size = block;
     buf = (char *)malloc(size * sizeof(char));
@@ -89,6 +89,16 @@ class strbuf {
 
   void reset() { end = 0; }
   void reset(const char *s) { end = 0; append(s); }
+
+  bool startswith(const char *prefix) {
+    size_t len = strlen(prefix);
+    return (len <= end) ? memcmp(buf, prefix, len) == 0 : false;
+  }
+
+  bool endswith(const char *suffix) {
+    size_t len = strlen(suffix);
+    return (len <= end) ? memcmp(buf-len, suffix, len) == 0 : false;
+  }
 
   void append(const char *s) {
     while (*s) {
