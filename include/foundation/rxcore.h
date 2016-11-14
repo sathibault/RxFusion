@@ -90,6 +90,27 @@ template <class T, class U> ScanOp<T,U> *Scan(const std::function<U (T&, U&)>& t
   return new ScanOp<T,U>(transform, init);
 }
 
+template <class T, class U, class V> class BuildOp : public Operator<T,V> {
+ private:
+  U state;
+  V result;
+  std::function <bool (T&, U&, V&)> fun;
+ public:
+  BuildOp(const std::function<bool (T&,U&,V&)>& builder) : fun(builder) {}
+  BuildOp(const std::function<bool (T&,U&,V&)>& builder, U init) : fun(builder), state(init) {}
+  void onData(RxNode *source, void *value) {
+    if (fun(*(T *)value, state, result))
+      this->subscribers.push(this, &result);
+  }
+};
+
+template <class T, class U, class V> BuildOp<T,U,V> *Build(const std::function<bool(T&,U&,V&)>& build) {
+  return new BuildOp<T,U,V>(build);
+}
+template <class T, class U, class V> BuildOp<T,U,V> *Build(const std::function<bool(T&,U&,V&)>& build, V init) {
+  return new BuildOp<T,U,V>(build, init);
+}
+
 enum Action { TPass, TDrop, TClose };
 
 template <class T> class TrafficOp : public Operator<T,T> {
@@ -557,6 +578,38 @@ template <class T> class DebounceOp : public Operator<T,T> {
 
 template <class T> DebounceOp<T> *Debounce(unsigned long millis) {
   return new DebounceOp<T>(millis);
+}
+
+template <class T> class ThrottleOp : public Operator<T,T> {
+ private:
+  bool drop;
+  unsigned long timeout;
+ public:
+  ThrottleOp(unsigned long millis) : timeout(millis) {
+    registerScheduled(this);
+    drop=false;
+  }
+  virtual ~ThrottleOp() { unregisterScheduled(this); }
+
+  void onData(RxNode *source, void *value) {
+    if (!drop) {
+      this->subscribers.push(this, value);
+      drop = true;
+    }
+  }
+
+  void init() {
+    scheduleInterval(this, timeout);
+  }
+  
+  bool run() {
+    drop = false;
+    return true;
+  }
+};
+
+template <class T> ThrottleOp<T> *Throttle(unsigned long millis) {
+  return new ThrottleOp<T>(millis);
 }
 
 

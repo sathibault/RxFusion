@@ -335,3 +335,14 @@ template <class T> Operator<T,bool> *IsNegative() {
 template <class T> Operator<T,bool> *IsZero() {
   return new MapOp<T,bool>([](T& x) -> bool { return x == 0; });
 }
+
+Operator<char,strbuf> *Lines() {
+  return Build<char,bool,strbuf>([](char& ch, bool& nl, strbuf& result) -> bool {
+    if (nl)
+      result.reset();
+    if (ch != '\r' && ch != '\n')
+      result.append(ch);
+    nl = (ch == '\n');
+    return nl;
+  });
+}
