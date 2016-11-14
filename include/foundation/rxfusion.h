@@ -26,8 +26,10 @@ limitations under the License.
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <functional>
+#ifndef MISSING_STDLIB
 #include <limits>
+#include <functional>
+#endif
 
 #ifndef CONSTRUCTED
 #define CONSTRUCTED

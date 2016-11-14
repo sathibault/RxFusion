@@ -21,10 +21,21 @@ unsigned int epoch_timestamp() {
 
 #else
 
+#ifdef ARDUINO_ARCH_AVR
+#define MISSING_STDLIB
+#include "include/arduino/avr-stdlib.h"
+#else
 // required by <functional>
 namespace std {
   void __throw_bad_function_call() { abort(); }
 }
+#endif
+
+#ifdef ARDUINO_ARCH_AVR
+#ifndef SoftwareSerial_h
+#error Please add SoftwareSerial to your project
+#endif
+#endif
 
 #ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
 #ifndef RTC_ZERO_H
@@ -39,7 +50,7 @@ unsigned int epoch_timestamp() { return 0; }
 
 #endif
 
-static unsigned serial_baud = 0;
+static unsigned long serial_baud = 0;
 
 #include "include/foundation/rxfusion.h"
 #include "include/foundation/network.h"

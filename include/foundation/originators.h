@@ -19,9 +19,9 @@ limitations under the License.
 template <class T> class Interval : public Originator<T> {
  private:
   T current;
-  unsigned interval;
+  unsigned long interval;
  public:
-  Interval(unsigned millis) : interval(millis) { }
+  Interval(unsigned long millis) : interval(millis) { }
 
   void init() {
     current = 0;

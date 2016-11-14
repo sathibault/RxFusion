@@ -11,7 +11,7 @@
 
 static unsigned long msHi, msLo;
 
-static void logPair(char *prefix, unsigned start, unsigned delay) {
+static void logPair(char *prefix, unsigned long start, unsigned long delay) {
   Serial.print(prefix);
   Serial.print(start);
   Serial.print(",");
@@ -33,7 +33,7 @@ class Scheduled {
 
   void clear() { node = NULL; }
 
-  void setInterval(unsigned millis) {
+  void setInterval(unsigned long millis) {
     interval = millis;
   }
 
@@ -121,7 +121,7 @@ void scheduleAlways(RxNode *node) {
   p->insAfter(&always);
 }
 
-void scheduleInterval(RxNode *node, unsigned intervalMillis) {
+void scheduleInterval(RxNode *node, unsigned long intervalMillis) {
   Scheduled *p = (Scheduled *)(node->schedule);
   p->safeRemove();
   p->start = currentMillis();
@@ -149,6 +149,11 @@ void setup() {
 }
 
 static bool sleepOn = false;
+
+#ifdef ARDUINO_ARCH_AVR
+void Sleepy() {
+}
+#endif
 
 #ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
 void Sleepy() {

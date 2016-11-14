@@ -82,7 +82,7 @@ template <class T, int width> Operator<T,T> *SumOf() {
   return BatchFold1<T,T,width>([](T& cur, T& accum)->T { return accum+cur; });
 }
 
-template <class T> const Compound<T,T> SumOver(unsigned millis) {
+template <class T> const Compound<T,T> SumOver(unsigned long millis) {
   auto *sum = IntermFold<T,T>([](T& elm, T& accum) -> T {
       return accum + elm;
     }, T(0));
@@ -109,7 +109,7 @@ template <class T, int width> const Compound<T,T> AverageOf() {
   return Compound<T,T>(sum, map);
 }
 
-template <class T> const Compound<T,T> AverageOver(unsigned millis) {
+template <class T> const Compound<T,T> AverageOver(unsigned long millis) {
   auto *sum = IntermFold<T,Tuple2<T,int>>([](T& elm, Tuple2<T,int>& t)->Tuple2<T,int> {
       return Tuple2<T,int>(t._1 + elm, t._2 + 1);
     }, Tuple2<T,int>(0,0));
@@ -144,7 +144,7 @@ template <class T, int width> Operator<T,T> *MinOf() {
     });
 }
 
-template <class T> const Compound<T,T> MinOver(unsigned millis) {
+template <class T> const Compound<T,T> MinOver(unsigned long millis) {
   auto *fold = IntermFold<T,T>([](T& elm, T& accum) -> T {
       return (elm < accum) ? elm : accum;
     }, std::numeric_limits<T>::max());
@@ -175,7 +175,7 @@ template <class T, int width> Operator<T,T> *MaxOf() {
     });
 }
 
-template <class T> const Compound<T,T> MaxOver(unsigned millis) {
+template <class T> const Compound<T,T> MaxOver(unsigned long millis) {
   auto *fold = IntermFold<T,T>([](T& elm, T& accum) -> T {
       return (elm > accum) ? elm : accum;
     }, std::numeric_limits<T>::min());
@@ -183,7 +183,6 @@ template <class T> const Compound<T,T> MaxOver(unsigned millis) {
   poll->setSource(fold);
   return Compound<T,T>(fold, poll);
 }
-
 
 //////////////////////////////////////// Math
 
@@ -252,7 +251,6 @@ template <class T> const Compound<T,T> Dedup() {
   prj->attach(filter);
   return Compound<T,T>(scan, prj);
 }
-
 
 template <class T> const Compound<T,T> Dedup(unsigned long expire) {
   // Previous value, timestamp, emit

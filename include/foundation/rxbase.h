@@ -293,5 +293,5 @@ template <class T, class U> class Compound {
 void registerScheduled(RxNode *node);
 void unregisterScheduled(RxNode *node);
 void scheduleAlways(RxNode *node);
-void scheduleInterval(RxNode *node, unsigned millis);
+void scheduleInterval(RxNode *node, unsigned long millis);
 void runAll();

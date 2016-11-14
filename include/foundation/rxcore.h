@@ -182,7 +182,7 @@ template <class T, class U, int width> class BatchFoldOp : public Operator<T,U> 
   U accum, initial;
   std::function<U (T&, U&)> fun;
  public:
-  BatchFoldOp(const std::function<U (T&, U&)>& fun, U init)
+  BatchFoldOp(const std::function<U (T&, U&)> fun, U init)
     : accum(init), initial(init), fun(fun) { count = 0; }
 
   void onData(RxNode *source, void *value) {
@@ -196,7 +196,7 @@ template <class T, class U, int width> class BatchFoldOp : public Operator<T,U> 
   }
 };
 
-template <class T, class U, int width> BatchFoldOp<T,U,width> *BatchFold(const std::function<U (T&, U&)>& fun, U init) {
+template <class T, class U, int width> BatchFoldOp<T,U,width> *BatchFold(const std::function<U (T&, U&)> fun, U init) {
   return new BatchFoldOp<T,U,width>(fun, init);
 }
 
@@ -478,10 +478,10 @@ template <class T, class U, class V, class W> class Zipper4 : public Observable<
 template <class T> class SampleOp : public Operator<T,T> {
  private:
   T latest;
-  unsigned interval;
+  unsigned long interval;
   bool empty,repeat,complete;
  public:
-  SampleOp(unsigned millis, bool repeat) : interval(millis),repeat(repeat) {
+  SampleOp(unsigned long millis, bool repeat) : interval(millis),repeat(repeat) {
     empty = true;
     complete=false;
   }
@@ -519,17 +519,17 @@ template <class T> class SampleOp : public Operator<T,T> {
   }
 };
 
-template <class T> SampleOp<T> *Sample(unsigned millis, bool repeat=false) {
+template <class T> SampleOp<T> *Sample(unsigned long millis, bool repeat=false) {
   return new SampleOp<T>(millis, repeat);
 }
 
 template <class T> class DebounceOp : public Operator<T,T> {
  private:
   T latest;
-  unsigned timeout;
+  unsigned long timeout;
   bool complete;
  public:
-  DebounceOp(unsigned millis) : timeout(millis) {
+  DebounceOp(unsigned long millis) : timeout(millis) {
     registerScheduled(this);
     complete=false;
   }
@@ -555,7 +555,7 @@ template <class T> class DebounceOp : public Operator<T,T> {
   }
 };
 
-template <class T> DebounceOp<T> *Debounce(unsigned millis) {
+template <class T> DebounceOp<T> *Debounce(unsigned long millis) {
   return new DebounceOp<T>(millis);
 }
 
@@ -587,10 +587,10 @@ template <class T, class U> IntermFoldOp<T,U> *IntermFold(const std::function<U 
 template <class T> class Iterator : public Originator<T> {
  private:
   Generator<T> *generator;
-  unsigned interval;
+  unsigned long interval;
   bool repeat, autoRepeat;
  public:
-  Iterator(unsigned millis, bool repeat, bool autoRepeat)
+  Iterator(unsigned long millis, bool repeat, bool autoRepeat)
     : interval(millis), repeat(repeat), autoRepeat(autoRepeat) { generator = NULL; }
   void setSource(Generator<T> *gen) { generator = gen; this->attach(gen); }
 
@@ -626,16 +626,16 @@ template <class T> class Iterator : public Originator<T> {
   }
 };
 
-template <class T> Iterator<T> *Iterate(unsigned millis=0, bool repeat=false, bool autoRepeat=true) {
+template <class T> Iterator<T> *Iterate(unsigned long millis=0, bool repeat=false, bool autoRepeat=true) {
   return new Iterator<T>(millis, repeat, autoRepeat);
 }
 
 template <class T> class Poller : public Originator<T> {
  private:
   State<T> *state;
-  unsigned interval;
+  unsigned long interval;
  public:
-  Poller(unsigned millis) : interval(millis) { state = NULL; }
+  Poller(unsigned long millis) : interval(millis) { state = NULL; }
   void setSource(State<T> *st) { state = st; this->attach(st); }
 
   void onData(RxNode *source, void *value) {
@@ -665,6 +665,6 @@ template <class T> class Poller : public Originator<T> {
   }
 };
 
-template <class T> Poller<T> *Poll(unsigned millis=0) {
+template <class T> Poller<T> *Poll(unsigned long millis=0) {
   return new Poller<T>(millis);
 }

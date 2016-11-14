@@ -16,6 +16,27 @@ limitations under the License.
 
 */
 
+#ifdef ARDUINO_ARCH_AVR
+class GpioSerial : public Originator<char> {
+  SoftwareSerial ss;
+ public:
+  GpioSerial(unsigned rxPin, unsigned txPin, unsigned long baud) : ss(rxPin, txPin) {
+    ss.begin(baud);
+  }
+
+  void init() {
+    scheduleAlways(this);
+  }
+  bool run() {
+    if (ss.available()) {
+      char ch = ss.read();
+      this->subscribers.push(this, &ch);
+    }
+    return true;
+  }
+};
+#endif
+
 template <class T> class BitIn : public State<T> {
  private:
   unsigned pin;
@@ -66,6 +87,7 @@ template <class T> class AnalogOut : public Consumer<T> {
 };
 
 #ifdef __MQX__
+
 template <class T> class Cpu : public Consumer<T> {
  private:
   strbuf sbuf;
@@ -83,7 +105,7 @@ template <class T> class Console : public Consumer<T> {
  private:
   strbuf sbuf;
  public:
-  Console(unsigned baud) : sbuf(80) {
+  Console(unsigned long baud) : sbuf(80) {
     serial_baud = baud;
   }
   void onData(RxNode *publisher, void *value) {
@@ -92,18 +114,45 @@ template <class T> class Console : public Consumer<T> {
     Serial0.println(sbuf.c_str());
   }
 };
+
+template <> class Console<char> : public Consumer<char> {
+ public:
+  Console(unsigned long baud) { serial_baud = baud; }
+  void onData(RxNode *publisher, void *value) {
+    Serial0.write(*(char *)value);
+  }
+};
+
 #else
+
 template <class T> class Console : public Consumer<T> {
  private:
   strbuf sbuf;
  public:
-  Console(unsigned baud) : sbuf(80) {
+  Console(unsigned long baud) : sbuf(80) {
     serial_baud=baud;
   }
   void onData(RxNode *publisher, void *value) {
     sbuf.reset();
     writeto(sbuf, *(T *)value);
     Serial.println(sbuf.c_str());
+  }
+};
+
+template <> class Console<char> : public Consumer<char> {
+ public:
+  Console(unsigned long baud) { serial_baud=baud; }
+  void onData(RxNode *publisher, void *value) {
+    Serial.write(*(char *)value);
+  }
+};
+
+template <> class Console<strbuf> : public Consumer<strbuf> {
+ public:
+  Console(unsigned long baud) { serial_baud=baud; }
+  void onData(RxNode *publisher, void *value) {
+    strbuf *sbuf = (strbuf *) value;
+    Serial.println(sbuf->c_str());
   }
 };
 #endif
