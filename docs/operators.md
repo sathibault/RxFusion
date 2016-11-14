@@ -62,6 +62,18 @@ Debounce(*millis*)
 
 Outputs each input after `millis` milliseconds if no other input has been received.
 
+### Throttle
+
+![Throttle](img/Throttle_diag.png)
+
+<img align="left" src="../img/cpp.png">
+Throttle&lt;*type*&gt;(*millis*)
+<br>
+<img align="left" src="../img/javascript.png">
+Throttle(*millis*)
+
+Rate limits the input stream to *average* at most one value per `millis` milliseconds.  It functions by outputing the first input received (if any) in successive windows of `millis` milliseconds.
+
 ### Sample
 
 ![Sample](img/Sample_diag.png)
@@ -639,4 +651,24 @@ Format&lt;*type*&gt;(*format*)
 Format(*format*)
 
 Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
+
+### Lines
+
+<img align="left" src="../img/cpp.png">
+Lines()
+<br>
+<img align="left" src="../img/javascript.png">
+Lines()
+
+Output a stream of lines (strbuf class) from an input stream of characters (char).
+
+### Build
+
+<img align="left" src="../img/cpp.png">
+Build&lt;*in-type*,*state-type*,*result-type*&gt;(*function*, *init*)
+<br>
+<img align="left" src="../img/javascript.png">
+Build(*function*, *init*)
+
+This operator replaces the scan -> filter -> map pattern with a single operator and also only allocates one result object at creation time.  The operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state and result as reference arguments.  If the function returns true, the value of result is output otherwise nothing is output.
 

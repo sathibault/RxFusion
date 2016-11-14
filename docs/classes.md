@@ -22,9 +22,29 @@ N/A
 
 Reads values from a digital `pin`.
 
+### GpioSerial
+
+<img align="left" src="../img/cpp.png">
+GpioSerial(*rxPin*, *txPin*, *baud*)
+<br>
+<img align="left" src="../img/javascript.png">
+N/A
+
+Reads serial input from `rxPin` and outputs char values.  A `txPin` is required, and will be put in output mode, but is never set.
+
 ## Outputs
 
 Classes that send or output data
+
+### Consume
+
+<img align="left" src="../img/cpp.png">
+Consume&lt;*type*&gt;(*function*)
+<br>
+<img align="left" src="../img/javascript.png">
+new Consume(*function*)
+
+Calls the function for each input value with that value as an argument.
 
 ### AnalogOut
 

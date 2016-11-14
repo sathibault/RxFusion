@@ -2,9 +2,12 @@
 
 A Reactive programming framework for IoT from edge to cloud.
 
-## First public release!
+## New release available
 
-RxFusion v0.0.2 for Arduino is now available:
+RxFusion v0.1.0 for Arduino is now available:
+
+* AVR support
+* New operators
 
 * Visit the [Documentation](http://rxfusion.readthedocs.io/en/latest/arduino/) for installation and API usage.
 
