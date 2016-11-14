@@ -16,6 +16,21 @@ limitations under the License.
 
 */
 
+template <class T> class CustomConsumer : public Consumer<T> {
+ private:
+  std::function<void (T&)> fun;
+ public:
+  CustomConsumer(const std::function<void (T&)>& consume) : fun(consume) {}
+  void onData(RxNode *publisher, void *value) {
+    fun(*(T *)value);
+  }
+};
+
+template <class T> Consumer<T> *Consume(const std::function<void (T&)>& consume) {
+
+  return new CustomConsumer<T>(consume);
+}
+
 template <class T> class Doc : public Consumer<T> {
  private:
   strbuf sbuf;
