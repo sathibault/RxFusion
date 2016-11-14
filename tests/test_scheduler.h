@@ -13,7 +13,7 @@ class Scheduled {
 
   void clear() { node = NULL; }
 
-  void setInterval(unsigned millis) {
+  void setInterval(unsigned long millis) {
     interval = millis;
   }
 
@@ -84,7 +84,7 @@ class Scheduler {
     p->insAfter(&always);
   }
 
-  void addInterval(RxNode *node, unsigned millis) {
+  void addInterval(RxNode *node, unsigned long millis) {
     Scheduled *p = (Scheduled *)(node->schedule);
     p->safeRemove();
     p->time = now;
@@ -161,7 +161,7 @@ void unregisterScheduled(RxNode *node) {
 void scheduleAlways(RxNode *node) {
   scheduler.addAlways(node);
 }
-void scheduleInterval(RxNode *node, unsigned millis) {
+void scheduleInterval(RxNode *node, unsigned long millis) {
   scheduler.addInterval(node, millis);
 }
 void runAll() {
