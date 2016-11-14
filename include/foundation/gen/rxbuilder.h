@@ -80,6 +80,8 @@ template <class T, class U> const StateNode<U> operator>>(const PipeNode<T>& x, 
 
 template <class T> void operator>>(const PipeNode<T>& x, Consumer<T>& sink) {  sink.attach(x.node);  CONSTRUCTED }
 
+template <class T> void operator>>(const PipeNode<T>& x, Consumer<T> *sink) {  sink->attach(x.node);  CONSTRUCTED }
+
 template <class T> const PipeMerge<T> operator+(const PipeMerge<T>& v, const PipeNode<T>& x) {   return PipeMerge<T>(v, x.node); }
 
 template <class T, int len> const PipeVec<T,len+1> operator&(const PipeVec<T,len>& v, const PipeNode<T>& x) {   return PipeVec<T,len+1>(v, x.node); }
