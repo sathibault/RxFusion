@@ -648,7 +648,7 @@ Generates a stream of values from an input by polling the current value every `m
 Format&lt;*type*&gt;(*format*)
 <br>
 <img align="left" src="../img/javascript.png">
-Format(*format*)
+N/A
 
 Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
 
@@ -658,7 +658,7 @@ Build a formatted string from input items using the `format` template.  Any occu
 Lines()
 <br>
 <img align="left" src="../img/javascript.png">
-Lines()
+N/A
 
 Output a stream of lines (strbuf class) from an input stream of characters (char).
 
@@ -668,7 +668,7 @@ Output a stream of lines (strbuf class) from an input stream of characters (char
 Build&lt;*in-type*,*state-type*,*result-type*&gt;(*function*, *init*)
 <br>
 <img align="left" src="../img/javascript.png">
-Build(*function*, *init*)
+N/A
 
-This operator replaces the scan -> filter -> map pattern with a single operator and also only allocates one result object at creation time.  The operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state and result as reference arguments.  If the function returns true, the value of result is output otherwise nothing is output.
+This operator replaces the scan -> filter -> map pattern with a single operator and also only allocates one result object at creation time.  The operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state and result as reference arguments.  If the function returns true, the current value of result is output otherwise nothing is output.
 

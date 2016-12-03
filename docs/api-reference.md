@@ -72,7 +72,7 @@ Operators that aggregate or summarize information from multiple items in output 
 * [Poll](operators.md#poll) Generates a stream of values from an input by polling the current value every `millis` milliseconds.
 * [Format](operators.md#format) Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
 * [Lines](operators.md#lines) Output a stream of lines (strbuf class) from an input stream of characters (char).
-* [Build](operators.md#build) This operator replaces the scan -> filter -> map pattern with a single operator and also only allocates one result object at creation time.  The operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state and result as reference arguments.  If the function returns true, the value of result is output otherwise nothing is output.
+* [Build](operators.md#build) This operator replaces the scan -> filter -> map pattern with a single operator and also only allocates one result object at creation time.  The operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state and result as reference arguments.  If the function returns true, the current value of result is output otherwise nothing is output.
 
 # Classes
 
