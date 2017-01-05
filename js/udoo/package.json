@@ -1,0 +1,14 @@
+{
+  "name": "rxfusion-udoo",
+  "version": "1.0.0",
+  "description": "RxFusion Udoo",
+  "main": "index.js",
+  "dependencies": {
+      "rxfusion": "latest"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Green Mountain Computing Systems, Inc.",
+  "license": "Apache 2.0"
+}
