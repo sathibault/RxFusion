@@ -1,4 +1,6 @@
+#ifndef __MQX__
 #include <Client.h>
+#endif
 
 // Network transport base class (referenced in foundation/network.h)
 #define TRANSPORT_BASE Client
@@ -53,7 +55,9 @@ unsigned int epoch_timestamp() { return 0; }
 static unsigned long serial_baud = 0;
 
 #include "include/foundation/rxfusion.h"
-#include "include/foundation/network.h"
 #include "include/arduino/io.h"
 #include "include/arduino/scheduler.h"
+#ifndef __MQX__
+#include "include/foundation/network.h"
 #include "include/arduino/utils.h"
+#endif

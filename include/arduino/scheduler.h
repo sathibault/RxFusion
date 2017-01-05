@@ -150,7 +150,7 @@ void setup() {
 
 static bool sleepOn = false;
 
-#ifdef ARDUINO_ARCH_AVR
+#if defined(ARDUINO_ARCH_AVR) || defined(__MQX__)
 void Sleepy() {
 }
 #endif

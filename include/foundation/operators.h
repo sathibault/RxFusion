@@ -210,6 +210,10 @@ template <class T, class U> Operator<T,U> *Toggle(U initial) {
   return new ScanOp<T,U>([](T& data, U& state) -> U { return !state; }, initial);
 }
 
+template <class T> Operator<T,T> *Abs() {
+  return new MapOp<T,T>([](T& x) -> T { return x < 0 ? -x : x; });
+}
+
 template <class T, class U> Operator<T,U> *Const(U c) {
   return new MapOp<T,U>([c](T& x) -> T { return c; });
 }
