@@ -27,6 +27,7 @@ Operations that output a subset of their input items.
 Operations that transforms each input item to produce an output item.
 
 * [Const](operators.md#const) For each input item, output `value`.
+* [Abs](operators.md#abs) For each input item, output it's absolute value.
 * [Scale](operators.md#scale) For each input item, output `k` __×__ input value.
 * [Add](operators.md#add) For each input item, output `b` __+__ input value.
 * [Clamp](operators.md#clamp) For each input item, output `lo` if the input is less than `lo`, `hi` if the input more than `hi`, or the input value if it is between `lo` and `hi`.

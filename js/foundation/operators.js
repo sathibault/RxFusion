@@ -171,6 +171,10 @@ Const = function (c) {
     return Map(x => c);
 }
 
+Abs = function () {
+    return Map(x => x < 0 ? -x : x);
+}
+
 Scale = function (k) {
     if (k == undefined)
 	throw new Error("Scale missing argument k");

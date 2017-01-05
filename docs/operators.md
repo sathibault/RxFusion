@@ -222,6 +222,18 @@ Const(*value*)
 
 For each input item, output `value`.
 
+### Abs
+
+![Abs](img/Abs_diag.png)
+
+<img align="left" src="../img/cpp.png">
+Abs&lt;*type*&gt;()
+<br>
+<img align="left" src="../img/javascript.png">
+Abs()
+
+For each input item, output it's absolute value.
+
 ### Scale
 
 ![Scale](img/Scale_diag.png)

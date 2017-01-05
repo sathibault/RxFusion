@@ -2,6 +2,7 @@ site_name: RxFusion
 pages:
   - Home: index.md
   - Arduino: arduino.md
+  - UDOO Neo: udoo-neo.md
   - API Summary: api-reference.md
   - API Reference:
     - Methods: methods.md
