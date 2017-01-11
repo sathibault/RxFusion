@@ -95,6 +95,7 @@ Classes that send or output data
 * [Console](classes.md#console) *C++:* Writes value to the serial output at the given `baud`.  *Javascript:* Writes value to the console.
 * [HttpPost](classes.md#httppost) Sends data to an HTTP endpoint using the HTTP POST method using transport (e.g. an instance of WiFiClient).  Optional headers are provided as n array of strings.
 * [MqttPub](classes.md#mqttpub) Publishs data to an MQTT endpoint with QOS 0.  The username, password, and keepAlive parameters are optional.
+* [SocketIO](classes.md#socketio) Sends data to a WebSocket via the socket.io module `io` with the event name `event`.
 
 # Methods
 

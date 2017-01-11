@@ -1,8 +1,8 @@
 # RxFusion for UDOO Neo
 
-RxFusion for UDOO Neo allows you to easly create dual-core applications
+RxFusion for UDOO Neo allows you to easily create dual-core applications
 in C++ and Javascript that collect data via the Cortex M4 and connect
-to the Internet via the Cortext A9.
+to the Internet via the Cortex A9.
 
 ## Installation
 
@@ -54,7 +54,7 @@ void app() {
 ```
 
 The first statement iterates through the `ramp` range (values -200 to
-200 by 5) and takes the absolute value to send to the PMW pin that
+200 by 5) and takes the absolute value to send to the PWM pin that
 drives the led.  The Iterate operator takes two arguments, the first
 is the delay in milliseconds and the second indicates whether to
 repeat or not.  Since repeat is true, the LED will fade in and out

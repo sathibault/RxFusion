@@ -30,7 +30,7 @@ Classes that receive or sample input data
 
 Classes that send or output data
 
-[Consume](classes.md#consume) – [AnalogOut](classes.md#analogout) – [BitOut](classes.md#bitout) – [Console](classes.md#console) – [HttpPost](classes.md#httppost) – [MqttPub](classes.md#mqttpub)
+[Consume](classes.md#consume) – [AnalogOut](classes.md#analogout) – [BitOut](classes.md#bitout) – [Console](classes.md#console) – [HttpPost](classes.md#httppost) – [MqttPub](classes.md#mqttpub) – [SocketIO](classes.md#socketio)
 
 ## Configuration
 

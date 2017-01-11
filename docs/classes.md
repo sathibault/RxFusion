@@ -69,7 +69,7 @@ Writes values to a digital `pin`.
 ### Console
 
 <img align="left" src="../img/cpp.png">
-Console&lt;*type*&gt;(*buad*)
+Console&lt;*type*&gt;(*baud*)
 <br>
 <img align="left" src="../img/javascript.png">
 new Console()
@@ -95,4 +95,14 @@ MqttPub&lt;*type*&gt;(*transport*, *host*, *port*, *topic*, *clientId*, *usernam
 N/A
 
 Publishs data to an MQTT endpoint with QOS 0.  The username, password, and keepAlive parameters are optional.
+
+### SocketIO
+
+<img align="left" src="../img/cpp.png">
+N/A
+<br>
+<img align="left" src="../img/javascript.png">
+new SocketIO(*io*, *event*)
+
+Sends data to a WebSocket via the socket.io module `io` with the event name `event`.
 
