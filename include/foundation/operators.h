@@ -17,13 +17,17 @@ limitations under the License.
 */
 
 template <class T, class U> MapOp<T,U> *Project1() {
-  return new MapOp<T,U>([](T& t) -> U { return t._1; });
+  return Map<T,U>([](T& t) -> U { return t._1; });
 }
 template <class T, class U> MapOp<T,U> *Project2() {
-  return new MapOp<T,U>([](T& t) -> U { return t._2; });
+  return Map<T,U>([](T& t) -> U { return t._2; });
 }
 template <class T, class U> MapOp<T,U> *Project3() {
-  return new MapOp<T,U>([](T& t) -> U { return t._3; });
+  return Map<T,U>([](T& t) -> U { return t._3; });
+}
+
+template <class T, class U> MapOp<T,U> *Project4() {
+  return Map<T,U>([](T& t) -> U { return t._4; });
 }
 
 template <class T, class U> Operator<T,U> *Count() {
@@ -244,13 +248,16 @@ template <class T> const Compound<T,T> Take(int take) {
 }
 
 template <class T> const Compound<T,T> Dedup() {
-  auto *scan = Scan<T,Tuple2<T,Maybe<T>>>([](T& cur, Tuple2<T,Maybe<T>>& last) -> Tuple2<T,Maybe<T>> {
-      return Tuple2<T,Maybe<T>>(cur, Maybe<T>(last._1));
-    }, Tuple2<T,Maybe<T>>());
-  auto *filter = Filter<Tuple2<T,Maybe<T>>>([](Tuple2<T,Maybe<T>>& x) -> bool {
-      return !x._2.exists || x._1 != x._2.value;
+  auto *scan = Scan<T,Tuple2<Maybe<T>,bool>>([](T& cur, Tuple2<Maybe<T>,bool>& state) -> Tuple2<Maybe<T>,bool> {
+      return Tuple2<Maybe<T>,bool>(Maybe<T>(cur),
+				   !state._1.exists || cur != state._1.value);
+    }, Tuple2<Maybe<T>,bool>());
+  auto *filter = Filter<Tuple2<Maybe<T>,bool>>([](Tuple2<Maybe<T>,bool>& x) -> bool {
+      return x._2;
     });
-  auto *prj = Project1<Tuple2<T,Maybe<T>>,T>();
+  auto *prj = Map<Tuple2<Maybe<T>,bool>,T>([](Tuple2<Maybe<T>,bool>& x) -> T {
+      return x._1.value;
+    });
   filter->attach(scan);
   prj->attach(filter);
   return Compound<T,T>(scan, prj);
