@@ -77,9 +77,7 @@ template <class T, class U> class ScanOp : public Operator<T,U> {
   U accum;
   std::function<U (T&, U&)> fun;
  public:
-  ScanOp(const std::function<U (T&, U&)>& transform, U init) : fun(transform) {
-    accum = init;
-  }
+ ScanOp(const std::function<U (T&, U&)>& transform, U& init) : fun(transform), accum(init) { }
   void onData(RxNode *source, void *value) {
     accum = fun(*(T *)value, accum);
     this->subscribers.push(this, &accum);
@@ -88,6 +86,28 @@ template <class T, class U> class ScanOp : public Operator<T,U> {
 
 template <class T, class U> ScanOp<T,U> *Scan(const std::function<U (T&, U&)>& transform, U init) {
   return new ScanOp<T,U>(transform, init);
+}
+
+template <class T, class U> class ScanOp2 : public Operator<T,U> {
+ private:
+  U accum;
+  std::function<void (T&, U&)> fun;
+ public:
+  ScanOp2(const std::function<void (T&, U&)>& transform, const std::function<void (U&)>& init) : fun(transform) {
+    init(accum);
+  }
+  void onData(RxNode *source, void *value) {
+    fun(*(T *)value, accum);
+    this->subscribers.push(this, &accum);
+  }
+};
+
+template <class T, class U> ScanOp2<T,U> *Scan(const std::function<void (T&, U&)>& transform) {
+  return new ScanOp2<T,U>(transform, [](U& u) {});
+}
+
+template <class T, class U> ScanOp2<T,U> *Scan(const std::function<void (T&, U&)>& transform, const std::function<void (U&)>& init) {
+  return new ScanOp2<T,U>(transform, init);
 }
 
 template <class T, class U, class V> class BuildOp : public Operator<T,V> {

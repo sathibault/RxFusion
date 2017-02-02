@@ -462,6 +462,32 @@ Scan(*function*, *init*)
 
 The scan operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state as arguments.  The returned value is output and becomes the new state.
 
+The function signature of the update function is
+
+```state-type update(in-type&, state-type&)```
+
+
+### Scan (no-copy)
+
+![Scan (no-copy)](img/Scan-no-copy_diag.png)
+
+<img align="left" src="../img/cpp.png">
+Scan&lt;*in-type*,*state-type*&gt;(*update*, *init*)
+<br>
+<img align="left" src="../img/javascript.png">
+Scan(*update*, *init*)
+
+The scan operator keeps a state of `state-type` which is initialized by `init` function (optional).  For each input item, the given `update` function is called with the input item and the current state as arguments.  The update can modify the state argument and the new state is the output of the operator.
+
+The function signature of the update function is
+
+```void update(in-type&, state-type&)```
+
+and the function signature of the init funciton is
+
+```void init(state-type&)```
+
+
 ## Aggregation
 
 Operators that aggregate or summarize information from multiple items in output items.

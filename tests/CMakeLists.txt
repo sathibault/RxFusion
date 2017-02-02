@@ -16,4 +16,5 @@ endfunction()
 
 add_g_test(test_builder test_builder.cpp)
 add_g_test(test_sources test_sources.cpp)
+add_g_test(test_core test_core.cpp)
 add_g_test(test_operators test_operators.cpp)
