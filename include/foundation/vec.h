@@ -20,14 +20,12 @@ template <class T, int len> class Vec {
  protected:
   T data[len];
  public:
+  T& operator[](const uint16_t idx) {
+    return data[idx];
+  }
   const T& operator[](const uint16_t idx) const {
     return data[idx];
   }
-};
-
-template <class T, int len> class VecWr : public Vec<T,len> {
- public:
-  void set(const uint16_t idx, T val) { this->data[idx] = val; }
 };
 
 template <class T, int len> void writeto(strbuf& sbuf, Vec<T,len>& t) {

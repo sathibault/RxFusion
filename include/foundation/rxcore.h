@@ -351,14 +351,14 @@ template <class T, class U> WithOp<T,U> *With(U init, const PipeNode<U>& pipe) {
 template <class T, int len> class ZipVec : public Observable<Vec<T,len>> {
  private:
   Vec<Observable<T>*,len> obs;
-  VecWr<T,len> data;
-  VecWr<bool,len> full;
+  Vec<T,len> data;
+  Vec<bool,len> full;
 
  public:
   ZipVec(const Vec<Observable<T>*,len>& args) : obs(args) {
     for (int i = 0; i < len; i++) {
       this->attach(obs[i]);
-      full.set(i, false);
+      full[i] = false;
     }
   }
 
@@ -366,14 +366,14 @@ template <class T, int len> class ZipVec : public Observable<Vec<T,len>> {
     int n = 0;
     for (int i = 0; i < len; i++) {
       if (obs[i] == source) {
-	data.set(i, *(T *)value);
-	full.set(i, true);
+	data[i] = *(T *)value;
+	full[i] = true;
       }
       if (full[i]) n += 1;
     }
     if (n == len) {
       for (int i = 0; i < len; i++)
-	full.set(i, false);
+	full[i] = false;
       this->subscribers.push(this, &data);
     }
   }

@@ -51,12 +51,12 @@ template <class T, class U> const PipeNode<U> operator>>(const PipeMerge<T>& m, 
 
 template <class T, int len> class PipeVec {
  public:
-  VecWr<Observable<T>*,len> args;
-  PipeVec(Observable<T> *a, Observable<T> *b) { args.set(0,a); args.set(1,b); }
+  Vec<Observable<T>*,len> args;
+  PipeVec(Observable<T> *a, Observable<T> *b) { args[0]=a; args[1]=b; }
   PipeVec(const PipeVec<int, len-1>& a, Observable<T> *b) {
     for (int i = 0; i < (len-1); i++)
-      args.set(i, a.args[i]);
-    args.set(len-1,b);
+      args[i] = a.args[i];
+    args[len-1] = b;
   }
   
   Observable<Vec<T,len>> *obs() const { return new ZipVec<T,len>(args); }
