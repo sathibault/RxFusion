@@ -56,6 +56,22 @@ template <class T, class U> MapOp<T,U> *Map(const std::function<U (T&)>& transfo
   return new MapOp<T,U>(transform);
 }
 
+template <class T, class U> class MapOp2 : public Operator<T,U> {
+ private:
+  U data;
+  std::function<void (T&, U&)> fun;
+ public:
+ MapOp2(const std::function<void (T&, U&)>& transform) : fun(transform) {}
+  void onData(RxNode *source, void *value) {
+    fun(*(T *)value, data);
+    this->subscribers.push(this, &data);
+  }
+};
+
+template <class T, class U> MapOp2<T,U> *Map(const std::function<void (T&, U&)>& transform) {
+  return new MapOp2<T,U>(transform);
+}
+
 template <class T> class FilterOp : public Operator<T,T> {
  private:
   std::function<bool (T&)> fun;

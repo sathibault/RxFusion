@@ -8,7 +8,7 @@ Operations that output a subset of their input items.
 
 Operations that transforms each input item to produce an output item.
 
-[Const](operators.md#const) – [Abs](operators.md#abs) – [Scale](operators.md#scale) – [Add](operators.md#add) – [Clamp](operators.md#clamp) – [ClampLow](operators.md#clamplow) – [ClampHigh](operators.md#clamphigh) – [IsOver](operators.md#isover) – [IsUnder](operators.md#isunder) – [IsAtLeast](operators.md#isatleast) – [IsAtMost](operators.md#isatmost) – [IsPositive](operators.md#ispositive) – [IsNegative](operators.md#isnegative) – [IsZero](operators.md#iszero) – [Toggle](operators.md#toggle) – [Project1](operators.md#project1) – [Project2](operators.md#project2) – [Project3](operators.md#project3) – [Counted](operators.md#counted) – [Map](operators.md#map) – [Scan](operators.md#scan) – [Scan (no-copy)](operators.md#scan-no-copy)
+[Const](operators.md#const) – [Abs](operators.md#abs) – [Scale](operators.md#scale) – [Add](operators.md#add) – [Clamp](operators.md#clamp) – [ClampLow](operators.md#clamplow) – [ClampHigh](operators.md#clamphigh) – [IsOver](operators.md#isover) – [IsUnder](operators.md#isunder) – [IsAtLeast](operators.md#isatleast) – [IsAtMost](operators.md#isatmost) – [IsPositive](operators.md#ispositive) – [IsNegative](operators.md#isnegative) – [IsZero](operators.md#iszero) – [Toggle](operators.md#toggle) – [Project1](operators.md#project1) – [Project2](operators.md#project2) – [Project3](operators.md#project3) – [Counted](operators.md#counted) – [Map](operators.md#map) – [Map (no copy)](operators.md#map-no-copy) – [Scan](operators.md#scan) – [Scan (no copy)](operators.md#scan-no-copy)
 
 ## Aggregation
 

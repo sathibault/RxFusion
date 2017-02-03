@@ -450,6 +450,30 @@ Map(*function*)
 
 For each tuple input item, apply the given `function` to the input and output the returned value.
 
+The signature of function is
+```c++
+out-type function(in-type&)
+```
+
+
+### Map (no copy)
+
+![Map (no copy)](img/Map-no-copy_diag.png)
+
+<img align="left" src="../img/cpp.png">
+Map&lt;*in-type*,*out-type*&gt;(*function*)
+<br>
+<img align="left" src="../img/javascript.png">
+Map(*function*)
+
+For each tuple input item, call the given `function` with the input and result and output the result.
+
+The signature of function is
+```c++
+void function(in-type&, out-type&)
+```
+
+
 ### Scan
 
 ![Scan](img/Scan_diag.png)
@@ -463,13 +487,14 @@ Scan(*function*, *init*)
 The scan operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state as arguments.  The returned value is output and becomes the new state.
 
 The function signature of the update function is
+```c++
+state-type update(in-type&, state-type&)
+```
 
-```state-type update(in-type&, state-type&)```
 
+### Scan (no copy)
 
-### Scan (no-copy)
-
-![Scan (no-copy)](img/Scan-no-copy_diag.png)
+![Scan (no copy)](img/Scan-no-copy_diag.png)
 
 <img align="left" src="../img/cpp.png">
 Scan&lt;*in-type*,*state-type*&gt;(*update*, *init*)
@@ -480,12 +505,13 @@ Scan(*update*, *init*)
 The scan operator keeps a state of `state-type` which is initialized by `init` function (optional).  For each input item, the given `update` function is called with the input item and the current state as arguments.  The update can modify the state argument and the new state is the output of the operator.
 
 The function signature of the update function is
-
-```void update(in-type&, state-type&)```
-
+```c++
+void update(in-type&, state-type&)
+```
 and the function signature of the init funciton is
-
-```void init(state-type&)```
+```c++
+void init(state-type&)
+```
 
 
 ## Aggregation

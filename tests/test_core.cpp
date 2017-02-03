@@ -31,3 +31,20 @@ TEST(CoreTest, Scan) {
   EXPECT_STREQ(out.text(), "1 2 3");
   out.clear();
 }
+
+TEST(CoreTest, Map) {
+  Doc<int> out;
+  Range<int> r(1,3);
+
+  r >> Map<int,int>([](int& cur) -> int {
+      return 2 * cur;
+    }) >> out;
+  EXPECT_STREQ(out.text(), "2 4 6");
+  out.clear();
+
+  r >> Map<int,int>([](int& cur, int& result) {
+      result = 2 * cur;
+    }) >> out;
+  EXPECT_STREQ(out.text(), "2 4 6");
+  out.clear();
+}

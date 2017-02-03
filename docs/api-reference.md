@@ -46,21 +46,36 @@ Operations that transforms each input item to produce an output item.
 * [Project3](operators.md#project3) For each tuple input item, output the 3rd element of the tuple
 * [Counted](operators.md#counted) For each tuple input item, output a tuple with the input item and total number of inputs seen.
 * [Map](operators.md#map) For each tuple input item, apply the given `function` to the input and output the returned value.
+
+The signature of function is
+```c++
+out-type function(in-type&)
+```
+
+* [Map (no copy)](operators.md#map-no-copy) For each tuple input item, call the given `function` with the input and result and output the result.
+
+The signature of function is
+```c++
+void function(in-type&, out-type&)
+```
+
 * [Scan](operators.md#scan) The scan operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state as arguments.  The returned value is output and becomes the new state.
 
 The function signature of the update function is
+```c++
+state-type update(in-type&, state-type&)
+```
 
-```state-type update(in-type&, state-type&)```
-
-* [Scan (no-copy)](operators.md#scan-no-copy) The scan operator keeps a state of `state-type` which is initialized by `init` function (optional).  For each input item, the given `update` function is called with the input item and the current state as arguments.  The update can modify the state argument and the new state is the output of the operator.
+* [Scan (no copy)](operators.md#scan-no-copy) The scan operator keeps a state of `state-type` which is initialized by `init` function (optional).  For each input item, the given `update` function is called with the input item and the current state as arguments.  The update can modify the state argument and the new state is the output of the operator.
 
 The function signature of the update function is
-
-```void update(in-type&, state-type&)```
-
+```c++
+void update(in-type&, state-type&)
+```
 and the function signature of the init funciton is
-
-```void init(state-type&)```
+```c++
+void init(state-type&)
+```
 
 
 ## Aggregation
