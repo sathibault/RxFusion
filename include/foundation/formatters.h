@@ -16,7 +16,7 @@ limitations under the License.
 
 */
 
-template <class T> class Formated : public xstring {
+template <class T> class Formated : public strgen {
  private:
   char *format;
   T *value;
@@ -69,7 +69,8 @@ template <class T> class FormatOp : public Operator<T,xstring> {
   FormatOp(const char *format) : formatter(format) {}
   void onData(RxNode *pub, void *val) {
     formatter.set((T *)val);
-    this->subscribers.push(this, &formatter);
+    xstring x = &formatter;
+    this->subscribers.push(this, &x);
   }
 };
 

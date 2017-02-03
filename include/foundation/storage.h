@@ -138,20 +138,34 @@ class strbuf {
   }
 };
 
-// A lazy string type
-class xstring {
+// A lazy string type implemented as an abstract string generator
+// class.  These are considered temporary and may be stack allocated.  They
+// should not be stored, write them to a strbuf to copy the value.
+class strgen {
  public:
   virtual void writeto(strbuf& buf) = 0;
 };
 
+// Make a pointer type so we can get it in/out vectors.  All string values
+// in streams are this type.
+typedef strgen *xstring;
 
-inline void writeto(strbuf& buf, const char *s) { buf.append(s); }
-inline void writeto(strbuf& buf, const char *s, int len) { buf.append(s, len); }
-inline void writeto(strbuf& buf, char x) { buf.append(x); }
-inline void writeto(strbuf& buf, int x) { buf.append(x); }
-inline void writeto(strbuf& buf, unsigned int x) { buf.append(x); }
-inline void writeto(strbuf& buf, float x) { buf.append(x); }
-inline void writeto(strbuf& buf, xstring& o) { o.writeto(buf); }
+// An xstring suitable substring.
+class strslice : public strgen {
+  const char *str;
+  int len;
+ public:
+  void set(const char *s, int start, int slen) {
+    str = s + start;
+    len = slen;
+  }
+  void set(const char *s, int slen) {
+    set(s, 0, slen);
+  }
+  void writeto(strbuf& buf) {
+    buf.append(str, len);
+  }
+};
 
 template<class T, int capacity> class xvec {
  protected:
@@ -204,3 +218,11 @@ template<class T, int capacity> class fifoWr : public fifo<T,capacity> {
     if (this->n < capacity) this->n++;
   }
 };
+
+inline void writeto(strbuf& buf, const char *s) { buf.append(s); }
+inline void writeto(strbuf& buf, const char *s, int len) { buf.append(s, len); }
+inline void writeto(strbuf& buf, char x) { buf.append(x); }
+inline void writeto(strbuf& buf, int x) { buf.append(x); }
+inline void writeto(strbuf& buf, unsigned int x) { buf.append(x); }
+inline void writeto(strbuf& buf, float x) { buf.append(x); }
+inline void writeto(strbuf& buf, xstring o) { o->writeto(buf); }
