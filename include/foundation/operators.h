@@ -347,6 +347,40 @@ template <class T> Operator<T,bool> *IsZero() {
   return new MapOp<T,bool>([](T& x) -> bool { return x == 0; });
 }
 
+// This ugly string business allows us to operate without using the heap!
+template <int max> Operator<xstring,Vec<xstring,max>> *Split(char delim) {
+  return Build<xstring,Tuple2<strbuf,Vec<strslice,max>>,Vec<xstring,max>>([delim](xstring& src, Tuple2<strbuf,Vec<strslice,max>>& data, Vec<xstring,max>& split) -> bool {
+      data._1.reset();
+      src->writeto(data._1);
+
+      int idx = 0;
+      int last = 0;
+      const char *s = data._1.c_str();
+      for (int i = 0; s[i] != 0; i++) {
+	if (s[i] == delim) {
+	  strslice& ss = data._2[idx];
+	  ss.set(data._1.c_str(), last, i-last);
+	  split[idx] = &ss;
+	  idx++;
+	  last = i + 1;
+	}
+      }
+      if (last < data._1.length()) {
+	strslice& ss = data._2[idx];
+	ss.set(data._1.c_str(), last, data._1.length()-last);
+	split[idx] = &ss;
+	idx++;
+      }
+      while (idx < max) {
+	strslice& ss = data._2[idx];
+	ss.set(data._1.c_str(), 0, 0);
+	split[idx] = &ss;
+	idx++;
+      }
+      return true;
+    });
+}
+
 Operator<char,strbuf> *Lines() {
   return Build<char,bool,strbuf>([](char& ch, bool& nl, strbuf& result) -> bool {
     if (nl)

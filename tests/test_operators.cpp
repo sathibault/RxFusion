@@ -74,7 +74,9 @@ TEST(OperatorTest, Timed) {
 
 TEST(OperatorTest, Misc) {
   Doc<int> out;
+  Doc<xstring> strout;
   Range<int> r(1,10);
+  Range<int> three(1,3);
 
   r >> Map<int,int>([](int x)->int { return x/3; }) >> Dedup<int>() >> out;
   EXPECT_STREQ(out.text(), "0 1 2 3");
@@ -115,4 +117,35 @@ TEST(OperatorTest, Misc) {
 
   r >> Toggle<int,int>(0) >> out;
   EXPECT_STREQ(out.text(), "1 0 1 0 1 0 1 0 1 0");
+  out.clear();
+
+  three >>
+    Format<int>("A$1;B$1") >>
+    Split<3>(';') >>
+    Map<Vec<xstring,3>,xstring>([](Vec<xstring,3>& x, xstring& y) {
+	y = x[0];
+      }) >>
+    strout;
+  EXPECT_STREQ(strout.text(), "A1 A2 A3");
+  strout.clear();
+
+  three >>
+    Format<int>("A$1;B$1") >>
+    Split<3>(';') >>
+    Map<Vec<xstring,3>,xstring>([](Vec<xstring,3>& x, xstring& y) {
+	y = x[1];
+      }) >>
+    strout;
+  EXPECT_STREQ(strout.text(), "B1 B2 B3");
+  strout.clear();
+
+  three >>
+    Format<int>("A$1;B$1") >>
+    Split<3>(';') >>
+    Map<Vec<xstring,3>,xstring>([](Vec<xstring,3>& x, xstring& y) {
+	y = x[2];
+      }) >>
+    strout;
+  EXPECT_STREQ(strout.text(), "");
+  strout.clear();
 }

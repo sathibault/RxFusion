@@ -464,7 +464,7 @@ out-type function(in-type&)
 Map&lt;*in-type*,*out-type*&gt;(*function*)
 <br>
 <img align="left" src="../img/javascript.png">
-Map(*function*)
+N/A
 
 For each tuple input item, call the given `function` with the input and result and output the result.
 
@@ -500,7 +500,7 @@ state-type update(in-type&, state-type&)
 Scan&lt;*in-type*,*state-type*&gt;(*update*, *init*)
 <br>
 <img align="left" src="../img/javascript.png">
-Scan(*update*, *init*)
+N/A
 
 The scan operator keeps a state of `state-type` which is initialized by `init` function (optional).  For each input item, the given `update` function is called with the input item and the current state as arguments.  The update can modify the state argument and the new state is the output of the operator.
 
@@ -725,6 +725,16 @@ Lines()
 N/A
 
 Output a stream of lines (strbuf class) from an input stream of characters (char).
+
+### Split
+
+<img align="left" src="../img/cpp.png">
+Split&lt;*max-fields*&gt;(*delimiter*)
+<br>
+<img align="left" src="../img/javascript.png">
+N/A
+
+Splits each input string at the given `delimiter` and outputs the resulting strings in a vector.  The C++ types are `xstring` input and `Vec<xstring,max-fields>` output.
 
 ### Build
 

@@ -18,7 +18,7 @@ Operators that aggregate or summarize information from multiple items in output 
 
 ## Miscellaneous
 
-[Range](operators.md#range) – [Iterate](operators.md#iterate) – [Poll](operators.md#poll) – [Format](operators.md#format) – [Lines](operators.md#lines) – [Build](operators.md#build)
+[Range](operators.md#range) – [Iterate](operators.md#iterate) – [Poll](operators.md#poll) – [Format](operators.md#format) – [Lines](operators.md#lines) – [Split](operators.md#split) – [Build](operators.md#build)
 
 ## Inputs
 
