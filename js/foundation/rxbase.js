@@ -95,7 +95,7 @@ RxNode.prototype.unsubscribe = function(node) {
     //console.log('unsubscribe');
     arrayRemove(this.subscribers, node);
     if (this.subscribers.length == 0 && this.sources.length > 0)
-	this.unlink();
+	this.detach();
 }
 
 RxNode.prototype.close = function(src) {
@@ -155,7 +155,10 @@ Consumer.prototype = new RxNode();
 
 Consumer.prototype.onClose = function(source) {
     arrayRemove(this.sources, source);
-    if (this.waiter) this.waiter();
+    if (this.waiter) {
+	//console.log('waiter');
+	this.waiter();
+    }
 }
 
 function Generator() {

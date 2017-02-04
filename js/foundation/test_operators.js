@@ -64,6 +64,24 @@ function runtests() {
     pred.then(x => console.log('done'));
 }
 
+testgroup('sources test','all', () => {
+    testcase('interval', () => {
+	var iv = new Interval(100);
+	var out = new Doc();
+	return rxbase.test()(iv >> Take(4) >> out).then(x => {
+	    assert.equal(out.text(), '0 1 2 3');
+	});
+    });
+
+    testcase('repeat', () => {
+	var rt = new Repeat('-');
+	var out = new Doc();
+	return rxbase.test()(rt >> Take(5) >> out).then(x => {
+	    assert.equal(out.text(), '- - - - -');
+	});
+    });
+});
+
 testgroup('operator test','filtering', () => {
     testcase('drop', () => {
 	var r = new Range(1,8);

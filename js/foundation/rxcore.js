@@ -230,8 +230,10 @@ TrafficOp.prototype.onData = function (source, data) {
     var op = this.fun(data);
     if (op > 0)
 	this.push(data);
-    else if (op == 0)
+    else if (op == 0) {
+	this.detach();
 	this.close();
+    }
 }
 
 Traffic = function (fun) {

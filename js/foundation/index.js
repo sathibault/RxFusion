@@ -19,5 +19,6 @@ limitations under the License.
 require('./rxbase.js');
 require('./rxcore.js');
 require('./operators.js');
+require('./originators.js');
 
 module.exports = rxbase.rx;
