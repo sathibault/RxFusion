@@ -34,3 +34,19 @@ template <class T> class Interval : public Originator<T> {
     return !this->subscribers.empty();
   }
 };
+
+template <class T> class Repeat : public Originator<T> {
+ private:
+  T value;
+ public:
+  Repeat(T value) : value(value) { }
+
+  void init() {
+    scheduleAlways(this);
+  }
+
+  bool run() {
+    this->subscribers.push(this, &value);
+    return !this->subscribers.empty();
+  }
+};

@@ -8,9 +8,14 @@ unsigned int epoch_timestamp() { return time(NULL); }
 #include "test_scheduler.h"
 
 TEST(SourceTest, Interval) {
-  Doc<int> out;
   Interval<int> beat(500);
+  Repeat<char> loop('.');
+  Doc<int> intout;
+  Doc<char> charout;
 
-  beat >> Take<int>(4) >> out;
-  EXPECT_STREQ(out.text(), "0 1 2 3");
+  beat >> Take<int>(4) >> intout;
+  EXPECT_STREQ(intout.text(), "0 1 2 3");
+
+  loop >> Take<char>(5) >> charout;
+  EXPECT_STREQ(charout.text(), ". . . . .");
 }
