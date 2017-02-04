@@ -18,7 +18,19 @@ Operators that aggregate or summarize information from multiple items in output 
 
 ## Miscellaneous
 
-[Range](operators.md#range) – [Iterate](operators.md#iterate) – [Poll](operators.md#poll) – [Format](operators.md#format) – [Lines](operators.md#lines) – [Split](operators.md#split) – [Build](operators.md#build)
+[Iterate](operators.md#iterate) – [Poll](operators.md#poll) – [Format](operators.md#format) – [Lines](operators.md#lines) – [Split](operators.md#split) – [Build](operators.md#build)
+
+## Generators
+
+Classes that generated data on demand (e.g. via Iterate)
+
+[Range](classes.md#range)
+
+## Producers
+
+Classes that produce a stream of data
+
+[Interval](classes.md#interval) – [Repeat](classes.md#repeat)
 
 ## Inputs
 
@@ -30,7 +42,11 @@ Classes that receive or sample input data
 
 Classes that send or output data
 
-[Consume](classes.md#consume) – [AnalogOut](classes.md#analogout) – [BitOut](classes.md#bitout) – [Console](classes.md#console) – [HttpPost](classes.md#httppost) – [MqttPub](classes.md#mqttpub) – [SocketIO](classes.md#socketio)
+[AnalogOut](classes.md#analogout) – [BitOut](classes.md#bitout) – [Console](classes.md#console) – [HttpPost](classes.md#httppost) – [MqttPub](classes.md#mqttpub) – [SocketIO](classes.md#socketio)
+
+## Consumers
+
+[Consume](classes.md#consume)
 
 ## Configuration
 

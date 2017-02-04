@@ -1,3 +1,41 @@
+## Generators
+
+Classes that generated data on demand (e.g. via Iterate)
+
+### Range
+
+<img align="left" src="../img/cpp.png">
+Range&lt;*type*&gt;(*from*, *to*, *increment*)
+<br>
+<img align="left" src="../img/javascript.png">
+new Range(*from*, *to*, *increment*)
+
+Generates integers in the range `from` to `to` by `increment`.  The increment is optional and defaults to 1.  Combine with `Iterate` to generate a stream.
+
+## Producers
+
+Classes that produce a stream of data
+
+### Interval
+
+<img align="left" src="../img/cpp.png">
+Interval&lt;*type*&gt;(*millis*)
+<br>
+<img align="left" src="../img/javascript.png">
+new Interval(*millis*)
+
+Produces integers from 0 on every `millis` milliseconds.
+
+### Repeat
+
+<img align="left" src="../img/cpp.png">
+Repeat&lt;*type*&gt;(*value*)
+<br>
+<img align="left" src="../img/javascript.png">
+new Repeat(*value*)
+
+Produces `value` every cycle.
+
 ## Inputs
 
 Classes that receive or sample input data
@@ -35,16 +73,6 @@ Reads serial input from `rxPin` and outputs char values.  A `txPin` is required,
 ## Outputs
 
 Classes that send or output data
-
-### Consume
-
-<img align="left" src="../img/cpp.png">
-Consume&lt;*type*&gt;(*function*)
-<br>
-<img align="left" src="../img/javascript.png">
-new Consume(*function*)
-
-Calls the function for each input value with that value as an argument.
 
 ### AnalogOut
 
@@ -105,4 +133,16 @@ N/A
 new SocketIO(*io*, *event*)
 
 Sends data to a WebSocket via the socket.io module `io` with the event name `event`.
+
+## Consumers
+
+### Consume
+
+<img align="left" src="../img/cpp.png">
+Consume&lt;*type*&gt;(*function*)
+<br>
+<img align="left" src="../img/javascript.png">
+new Consume(*function*)
+
+Calls the function for each input value with that value as an argument.
 

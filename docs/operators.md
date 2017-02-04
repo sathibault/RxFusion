@@ -676,16 +676,6 @@ Outputs the maximum of each batch of input items received over `millis` millisec
 
 ## Miscellaneous
 
-### Range
-
-<img align="left" src="../img/cpp.png">
-Range&lt;*type*&gt;(*from*, *to*, *increment*)
-<br>
-<img align="left" src="../img/javascript.png">
-Range(*from*, *to*, *increment*)
-
-Generates integers in the range `from` to `to` by `increment`.  The increment is optional and defaults to 1.  Combine with `Iterate` to generate a stream.
-
 ### Iterate
 
 <img align="left" src="../img/cpp.png">
