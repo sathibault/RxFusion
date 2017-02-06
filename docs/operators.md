@@ -452,7 +452,7 @@ For each tuple input item, apply the given `function` to the input and output th
 
 The signature of function is
 ```c++
-out-type function(in-type&)
+out-type function(const in-type&)
 ```
 
 
@@ -470,7 +470,7 @@ For each tuple input item, call the given `function` with the input and result a
 
 The signature of function is
 ```c++
-void function(in-type&, out-type&)
+void function(const in-type&, out-type&)
 ```
 
 
@@ -488,7 +488,7 @@ The scan operator keeps a state of `state-type` which is initially `init`.  For 
 
 The function signature of the update function is
 ```c++
-state-type update(in-type&, state-type&)
+state-type update(const in-type&, const state-type&)
 ```
 
 
@@ -506,7 +506,7 @@ The scan operator keeps a state of `state-type` which is initialized by `init` f
 
 The function signature of the update function is
 ```c++
-void update(in-type&, state-type&)
+void update(const in-type&, state-type&)
 ```
 and the function signature of the init funciton is
 ```c++
@@ -674,6 +674,48 @@ MaxOver(*millis*)
 
 Outputs the maximum of each batch of input items received over `millis` milliseconds.
 
+## String operators
+
+### Lines
+
+<img align="left" src="../img/cpp.png">
+Lines()
+<br>
+<img align="left" src="../img/javascript.png">
+N/A
+
+Output a stream of lines (strbuf class) from an input stream of characters (char).
+
+### Format
+
+<img align="left" src="../img/cpp.png">
+Format&lt;*type*&gt;(*format*)
+<br>
+<img align="left" src="../img/javascript.png">
+N/A
+
+Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
+
+### Split
+
+<img align="left" src="../img/cpp.png">
+Split&lt;*max-fields*&gt;(*delimiter*)
+<br>
+<img align="left" src="../img/javascript.png">
+N/A
+
+Splits each input string at the given `delimiter` and outputs the resulting strings in a vector.  The C++ types are `strbuf` input and `Vec<strbuf,max-fields>` output.
+
+### String
+
+<img align="left" src="../img/cpp.png">
+String&lt;*input-type*&gt;()
+<br>
+<img align="left" src="../img/javascript.png">
+N/A
+
+Converts the input values to a string and outputs it as a `strbuf`
+
 ## Miscellaneous
 
 ### Iterate
@@ -695,36 +737,6 @@ Poll&lt;*type*&gt;(*millis*)
 Poll(*millis*)
 
 Generates a stream of values from an input by polling the current value every `millis` milliseconds.
-
-### Format
-
-<img align="left" src="../img/cpp.png">
-Format&lt;*type*&gt;(*format*)
-<br>
-<img align="left" src="../img/javascript.png">
-N/A
-
-Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
-
-### Lines
-
-<img align="left" src="../img/cpp.png">
-Lines()
-<br>
-<img align="left" src="../img/javascript.png">
-N/A
-
-Output a stream of lines (strbuf class) from an input stream of characters (char).
-
-### Split
-
-<img align="left" src="../img/cpp.png">
-Split&lt;*max-fields*&gt;(*delimiter*)
-<br>
-<img align="left" src="../img/javascript.png">
-N/A
-
-Splits each input string at the given `delimiter` and outputs the resulting strings in a vector.  The C++ types are `xstring` input and `Vec<xstring,max-fields>` output.
 
 ### Build
 

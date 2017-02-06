@@ -30,6 +30,10 @@ class bytebuf {
   }
 
  public:
+  // non-assignable
+  bytebuf(const bytebuf& other) = delete;
+  bytebuf& operator=(bytebuf const&) = delete;
+
   bytebuf(int block) {
     blockSize = block;
     size = block;
@@ -76,26 +80,35 @@ class strbuf {
   }
 
  public:
-  strbuf(int block=80) {
+  // non-assignable
+  strbuf(const strbuf& other) = delete;
+  strbuf& operator=(strbuf const&) = delete;
+
+  strbuf(int block) {
     blockSize = block;
     size = block;
     buf = (char *)malloc(size * sizeof(char));
     end = 0;
   }
+  strbuf() : strbuf(32) { }
+
   ~strbuf() { free(buf); }
 
-  const char *c_str() { buf[end] = 0; return buf; }
-  uint16_t length() { return end; }
+  const char *c_str() const { buf[end] = 0; return buf; }
+  const char *data() const { return buf; }
+  uint16_t length() const { return end; }
 
   void reset() { end = 0; }
   void reset(const char *s) { end = 0; append(s); }
+  void reset(const char *s, int len) { end = 0; append(s, len); }
+  void reset(const strbuf& other) { end = 0; append(other.data(), other.length()); }
 
-  bool startswith(const char *prefix) {
+  bool startswith(const char *prefix) const {
     size_t len = strlen(prefix);
     return (len <= end) ? memcmp(buf, prefix, len) == 0 : false;
   }
 
-  bool endswith(const char *suffix) {
+  bool endswith(const char *suffix) const {
     size_t len = strlen(suffix);
     return (len <= end) ? memcmp(buf-len, suffix, len) == 0 : false;
   }
@@ -225,4 +238,5 @@ inline void writeto(strbuf& buf, char x) { buf.append(x); }
 inline void writeto(strbuf& buf, int x) { buf.append(x); }
 inline void writeto(strbuf& buf, unsigned int x) { buf.append(x); }
 inline void writeto(strbuf& buf, float x) { buf.append(x); }
+inline void writeto(strbuf& buf, const strbuf& o) { buf.append(o.data(), o.length()); }
 inline void writeto(strbuf& buf, xstring o) { o->writeto(buf); }

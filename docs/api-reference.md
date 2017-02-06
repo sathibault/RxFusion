@@ -49,28 +49,28 @@ Operations that transforms each input item to produce an output item.
 
 The signature of function is
 ```c++
-out-type function(in-type&)
+out-type function(const in-type&)
 ```
 
 * [Map (no copy)](operators.md#map-no-copy) For each tuple input item, call the given `function` with the input and result and output the result.
 
 The signature of function is
 ```c++
-void function(in-type&, out-type&)
+void function(const in-type&, out-type&)
 ```
 
 * [Scan](operators.md#scan) The scan operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state as arguments.  The returned value is output and becomes the new state.
 
 The function signature of the update function is
 ```c++
-state-type update(in-type&, state-type&)
+state-type update(const in-type&, const state-type&)
 ```
 
 * [Scan (no copy)](operators.md#scan-no-copy) The scan operator keeps a state of `state-type` which is initialized by `init` function (optional).  For each input item, the given `update` function is called with the input item and the current state as arguments.  The update can modify the state argument and the new state is the output of the operator.
 
 The function signature of the update function is
 ```c++
-void update(in-type&, state-type&)
+void update(const in-type&, state-type&)
 ```
 and the function signature of the init funciton is
 ```c++
@@ -96,13 +96,17 @@ Operators that aggregate or summarize information from multiple items in output 
 * [MaxOf](operators.md#maxof) Outputs the maximum of each batch of `count` input items.
 * [MaxOver](operators.md#maxover) Outputs the maximum of each batch of input items received over `millis` milliseconds.
 
+## String operators
+
+* [Lines](operators.md#lines) Output a stream of lines (strbuf class) from an input stream of characters (char).
+* [Format](operators.md#format) Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
+* [Split](operators.md#split) Splits each input string at the given `delimiter` and outputs the resulting strings in a vector.  The C++ types are `strbuf` input and `Vec<strbuf,max-fields>` output.
+* [String](operators.md#string) Converts the input values to a string and outputs it as a `strbuf`
+
 ## Miscellaneous
 
 * [Iterate](operators.md#iterate) Generates a stream of values from a generator (e.g. `Range`).  The values are generated one every `millis` milliseconds.  If `repeat` is true then the iterater will start over with the 1st value after it reaches the last.  The millis and repeat parameters are optional with defaults 0 and false respectively.
 * [Poll](operators.md#poll) Generates a stream of values from an input by polling the current value every `millis` milliseconds.
-* [Format](operators.md#format) Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
-* [Lines](operators.md#lines) Output a stream of lines (strbuf class) from an input stream of characters (char).
-* [Split](operators.md#split) Splits each input string at the given `delimiter` and outputs the resulting strings in a vector.  The C++ types are `xstring` input and `Vec<xstring,max-fields>` output.
 * [Build](operators.md#build) This operator replaces the scan -> filter -> map pattern with a single operator and also only allocates one result object at creation time.  The operator keeps a state of `state-type` which is initially `init`.  For each input item, the given `function` is called with the input item and the current state and result as reference arguments.  If the function returns true, the current value of result is output otherwise nothing is output.
 
 # Classes

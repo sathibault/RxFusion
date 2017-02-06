@@ -155,7 +155,7 @@ class RxNode {
   virtual void unsubscribe(RxNode *node) {
     if (!subscribers.empty()) {
       subscribers.remove(node);
-      if (subscribers.empty() && !sources.empty()) {
+      if (subscribers.empty() && !sources.empty() && schedule == NULL) {
 	sources.unlink(this);
 	delete this;
       }

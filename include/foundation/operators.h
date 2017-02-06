@@ -192,23 +192,23 @@ template <class T> const Compound<T,T> MaxOver(unsigned long millis) {
 //////////////////////////////////////// Math
 
 template <class T> Operator<T,T> *Scale(T k) {
-  return new MapOp<T,T>([k](const T& x) -> T { return k*x; });
+  return Map<T,T>([k](const T& x) -> T { return k*x; });
 }
 
 template <class T> Operator<T,T> *Add(T b) {
-  return new MapOp<T,T>([b](const T& x) -> T { return x+b; });
+  return Map<T,T>([b](const T& x) -> T { return x+b; });
 }
 
 template <class T> Operator<T,T> *ClampHigh(T u) {
-  return new MapOp<T,T>([u](const T& x) -> T { return x > u ? u : x; });
+  return Map<T,T>([u](const T& x) -> T { return x > u ? u : x; });
 }
 
 template <class T> Operator<T,T> *ClampLow(T l) {
-  return new MapOp<T,T>([l](const T& x) -> T { return x < l ? l : x; });
+  return Map<T,T>([l](const T& x) -> T { return x < l ? l : x; });
 }
 
 template <class T> Operator<T,T> *Clamp(T l, T u) {
-  return new MapOp<T,T>([l,u](const T& x) -> T { return x < l ? l : (x > u ? u : x); });
+  return Map<T,T>([l,u](const T& x) -> T { return x < l ? l : (x > u ? u : x); });
 }
 
 template <class T, class U> Operator<T,U> *Toggle(U initial) {
@@ -218,11 +218,11 @@ template <class T, class U> Operator<T,U> *Toggle(U initial) {
 }
 
 template <class T> Operator<T,T> *Abs() {
-  return new MapOp<T,T>([](const T& x) -> T { return x < 0 ? -x : x; });
+  return Map<T,T>([](const T& x) -> T { return x < 0 ? -x : x; });
 }
 
 template <class T, class U> Operator<T,U> *Const(U c) {
-  return new MapOp<T,U>([c](const T& x) -> T { return c; });
+  return Map<T,U>([c](const T& x) -> T { return c; });
 }
 
 
@@ -287,100 +287,74 @@ template <class T> const Compound<T,T> Dedup(unsigned long expire) {
 }
 
 Operator<bool,bool> *True() {
-  return new FilterOp<bool>([](const bool& x) -> bool { return x; });
+  return Filter<bool>([](const bool& x) -> bool { return x; });
 }
 
 Operator<bool,bool> *False() {
-  return new FilterOp<bool>([](const bool& x) -> bool { return !x; });
+  return Filter<bool>([](const bool& x) -> bool { return !x; });
 }
 
 template <class T> Operator<T,T> *Over(T th) {
-  return new FilterOp<T>([th](const T& x) -> bool { return x > th; });
+  return Filter<T>([th](const T& x) -> bool { return x > th; });
 }
 
 template <class T> Operator<T,T> *Under(T th) {
-  return new FilterOp<T>([th](const T& x) -> bool { return x < th; });
+  return Filter<T>([th](const T& x) -> bool { return x < th; });
 }
 
 template <class T> Operator<T,T> *AtLeast(T th) {
-  return new FilterOp<T>([th](const T& x) -> bool { return x >= th; });
+  return Filter<T>([th](const T& x) -> bool { return x >= th; });
 }
 
 template <class T> Operator<T,T> *AtMost(T th) {
-  return new FilterOp<T>([th](const T& x) -> bool { return x <= th; });
+  return Filter<T>([th](const T& x) -> bool { return x <= th; });
 }
 
 template <class T> Operator<T,T> *Positive() {
-  return new FilterOp<T>([](const T& x) -> bool { return x > 0; });
+  return Filter<T>([](const T& x) -> bool { return x > 0; });
 }
 
 template <class T> Operator<T,T> *Negative() {
-  return new FilterOp<T>([](const T& x) -> bool { return x < 0; });
+  return Filter<T>([](const T& x) -> bool { return x < 0; });
 }
 
 template <class T> Operator<T,T> *Zero() {
-  return new FilterOp<T>([](const T& x) -> bool { return x == 0; });
+  return Filter<T>([](const T& x) -> bool { return x == 0; });
 }
 
 template <class T> Operator<T,bool> *IsOver(T th) {
-  return new MapOp<T,bool>([th](const T& x) -> bool { return x > th; });
+  return Map<T,bool>([th](const T& x) -> bool { return x > th; });
 }
 
 template <class T> Operator<T,bool> *IsUnder(T th) {
-  return new MapOp<T,bool>([th](const T& x) -> bool { return x < th; });
+  return Map<T,bool>([th](const T& x) -> bool { return x < th; });
 }
 
 template <class T> Operator<T,bool> *IsAtLeast(T th) {
-  return new MapOp<T,bool>([th](const T& x) -> bool { return x >= th; });
+  return Map<T,bool>([th](const T& x) -> bool { return x >= th; });
 }
 
 template <class T> Operator<T,bool> *IsAtMost(T th) {
-  return new MapOp<T,bool>([th](const T& x) -> bool { return x <= th; });
+  return Map<T,bool>([th](const T& x) -> bool { return x <= th; });
 }
 
 template <class T> Operator<T,bool> *IsPositive() {
-  return new MapOp<T,bool>([](const T& x) -> bool { return x > 0; });
+  return Map<T,bool>([](const T& x) -> bool { return x > 0; });
 }
 
 template <class T> Operator<T,bool> *IsNegative() {
-  return new MapOp<T,bool>([](const T& x) -> bool { return x < 0; });
+  return Map<T,bool>([](const T& x) -> bool { return x < 0; });
 }
 
 template <class T> Operator<T,bool> *IsZero() {
-  return new MapOp<T,bool>([](const T& x) -> bool { return x == 0; });
+  return Map<T,bool>([](const T& x) -> bool { return x == 0; });
 }
 
-// This ugly string business allows us to operate without using the heap!
-template <int max> Operator<xstring,Vec<xstring,max>> *Split(char delim) {
-  return Build<xstring,Tuple2<strbuf,Vec<strslice,max>>,Vec<xstring,max>>([delim](const xstring& src, Tuple2<strbuf,Vec<strslice,max>>& data, Vec<xstring,max>& split) -> bool {
-      data._1.reset();
-      src->writeto(data._1);
-
-      int idx = 0;
-      int last = 0;
-      const char *s = data._1.c_str();
-      for (int i = 0; s[i] != 0; i++) {
-	if (s[i] == delim) {
-	  strslice& ss = data._2[idx];
-	  ss.set(data._1.c_str(), last, i-last);
-	  split[idx] = &ss;
-	  idx++;
-	  last = i + 1;
-	}
-      }
-      if (last < data._1.length()) {
-	strslice& ss = data._2[idx];
-	ss.set(data._1.c_str(), last, data._1.length()-last);
-	split[idx] = &ss;
-	idx++;
-      }
-      while (idx < max) {
-	strslice& ss = data._2[idx];
-	ss.set(data._1.c_str(), 0, 0);
-	split[idx] = &ss;
-	idx++;
-      }
-      return true;
+template <class T> Operator<T,strbuf> *String() {
+  return Scan<T,strbuf>([](const T& src, strbuf& str) {
+      str.reset();
+      writeto(str, src);
+      puts(str.c_str());
     });
 }
 
@@ -393,4 +367,28 @@ Operator<char,strbuf> *Lines() {
     nl = (ch == '\n');
     return nl;
   });
+}
+
+template <int max> Operator<strbuf,Vec<strbuf,max>> *Split(char delim) {
+  return Scan<strbuf,Vec<strbuf,max>>([delim](const strbuf& src, Vec<strbuf,max>& fields) {
+      int idx = 0;
+      int last = 0;
+      const char *s = src.c_str();
+      for (int i = 0; s[i] != 0; i++) {
+	if (s[i] == delim) {
+	  fields[idx].reset(s+last, i-last);
+	  idx++;
+	  last = i + 1;
+	}
+      }
+      if (last < src.length()) {
+	fields[idx].reset(s+last, src.length()-last);
+	idx++;
+      }
+      while (idx < max) {
+	fields[idx].reset();
+	idx++;
+      }
+      return true;
+    });
 }

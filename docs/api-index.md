@@ -16,9 +16,13 @@ Operators that aggregate or summarize information from multiple items in output 
 
 [Count](operators.md#count) – [WinSum](operators.md#winsum) – [SumOf](operators.md#sumof) – [SumOver](operators.md#sumover) – [WinAverage](operators.md#winaverage) – [AverageOf](operators.md#averageof) – [AverageOver](operators.md#averageover) – [WinMin](operators.md#winmin) – [MinOf](operators.md#minof) – [MinOver](operators.md#minover) – [WinMax](operators.md#winmax) – [MaxOf](operators.md#maxof) – [MaxOver](operators.md#maxover)
 
+## String operators
+
+[Lines](operators.md#lines) – [Format](operators.md#format) – [Split](operators.md#split) – [String](operators.md#string)
+
 ## Miscellaneous
 
-[Iterate](operators.md#iterate) – [Poll](operators.md#poll) – [Format](operators.md#format) – [Lines](operators.md#lines) – [Split](operators.md#split) – [Build](operators.md#build)
+[Iterate](operators.md#iterate) – [Poll](operators.md#poll) – [Build](operators.md#build)
 
 ## Generators
 
