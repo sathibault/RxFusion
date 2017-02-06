@@ -180,31 +180,6 @@ class strslice : public strgen {
   }
 };
 
-template<class T, int capacity> class xvec {
- protected:
-  T data[capacity];
-  uint16_t endPtr, n;
- public:
-  xvec() { endPtr = capacity-1; n = 0; }
-  bool isEmpty() { return n == 0; }
-  bool isFull() { return n == capacity; }
-  uint16_t count() { return n; }
-  T& operator[](const uint16_t idx) {
-    return (idx <= endPtr) ? data[endPtr-idx] : data[capacity-(idx-endPtr)];
-  }
-};
-
-template<class T, int capacity> class xvecWr : public xvec<T,capacity> {
- private:
-  int next(int i) { i++; return i<capacity ? i : 0; }
- public:
-  void push(T& sample) {
-    this->endPtr = next(this->endPtr);
-    this->data[this->endPtr] = sample;
-    if (this->n < capacity) this->n++;
-  }
-};
-
 template<class T, int capacity> class fifo {
  protected:
   T data[capacity];
