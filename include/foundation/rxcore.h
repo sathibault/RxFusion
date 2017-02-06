@@ -21,7 +21,7 @@ template <class T> class Maybe {
   T value;
   bool exists;
   Maybe() { exists = false; }
-  Maybe(T &a) : value(a) { exists = true; }
+  Maybe(const T &a) : value(a) { exists = true; }
 };
 
 //////////////////////////////////////// Basic components
@@ -43,40 +43,40 @@ template <class T, class U> CounterOp<T,U> *Counted() {
 
 template <class T, class U> class MapOp : public Operator<T,U> {
  private:
-  std::function<U (T&)> fun;
+  std::function<U (const T&)> fun;
  public:
-  MapOp(const std::function<U (T&)>& transform) : fun(transform) {}
+  MapOp(const std::function<U (const T&)>& transform) : fun(transform) {}
   void onData(RxNode *source, void *value) {
     U b = fun(*(T *)value);
     this->subscribers.push(this, &b);
   }
 };
 
-template <class T, class U> MapOp<T,U> *Map(const std::function<U (T&)>& transform) {
+template <class T, class U> MapOp<T,U> *Map(const std::function<U (const T&)>& transform) {
   return new MapOp<T,U>(transform);
 }
 
 template <class T, class U> class MapOp2 : public Operator<T,U> {
  private:
   U data;
-  std::function<void (T&, U&)> fun;
+  std::function<void (const T&, U&)> fun;
  public:
- MapOp2(const std::function<void (T&, U&)>& transform) : fun(transform) {}
+ MapOp2(const std::function<void (const T&, U&)>& transform) : fun(transform) {}
   void onData(RxNode *source, void *value) {
     fun(*(T *)value, data);
     this->subscribers.push(this, &data);
   }
 };
 
-template <class T, class U> MapOp2<T,U> *Map(const std::function<void (T&, U&)>& transform) {
+template <class T, class U> MapOp2<T,U> *Map(const std::function<void (const T&, U&)>& transform) {
   return new MapOp2<T,U>(transform);
 }
 
 template <class T> class FilterOp : public Operator<T,T> {
  private:
-  std::function<bool (T&)> fun;
+  std::function<bool (const T&)> fun;
  public:
-  FilterOp(const std::function<bool (T&)>& filter) : fun(filter) { }
+  FilterOp(const std::function<bool (const T&)>& filter) : fun(filter) { }
   void onData(RxNode *source, void *value) {
     T current = *(T *)value;
     if (fun(current))
@@ -84,32 +84,32 @@ template <class T> class FilterOp : public Operator<T,T> {
   }
 };
 
-template <class T> FilterOp<T> *Filter(const std::function<bool (T&)>& filter) {
+template <class T> FilterOp<T> *Filter(const std::function<bool (const T&)>& filter) {
   return new FilterOp<T>(filter);
 }
 
 template <class T, class U> class ScanOp : public Operator<T,U> {
  private:
   U accum;
-  std::function<U (T&, U&)> fun;
+  std::function<U (const T&, const U&)> fun;
  public:
- ScanOp(const std::function<U (T&, U&)>& transform, U& init) : fun(transform), accum(init) { }
+ ScanOp(const std::function<U (const T&, const U&)>& transform, U& init) : fun(transform), accum(init) { }
   void onData(RxNode *source, void *value) {
     accum = fun(*(T *)value, accum);
     this->subscribers.push(this, &accum);
   }
 };
 
-template <class T, class U> ScanOp<T,U> *Scan(const std::function<U (T&, U&)>& transform, U init) {
+template <class T, class U> ScanOp<T,U> *Scan(const std::function<U (const T&, const U&)>& transform, U init) {
   return new ScanOp<T,U>(transform, init);
 }
 
 template <class T, class U> class ScanOp2 : public Operator<T,U> {
  private:
   U accum;
-  std::function<void (T&, U&)> fun;
+  std::function<void (const T&, U&)> fun;
  public:
-  ScanOp2(const std::function<void (T&, U&)>& transform, const std::function<void (U&)>& init) : fun(transform) {
+  ScanOp2(const std::function<void (const T&, U&)>& transform, const std::function<void (U&)>& init) : fun(transform) {
     init(accum);
   }
   void onData(RxNode *source, void *value) {
@@ -118,11 +118,11 @@ template <class T, class U> class ScanOp2 : public Operator<T,U> {
   }
 };
 
-template <class T, class U> ScanOp2<T,U> *Scan(const std::function<void (T&, U&)>& transform) {
+template <class T, class U> ScanOp2<T,U> *Scan(const std::function<void (const T&, U&)>& transform) {
   return new ScanOp2<T,U>(transform, [](U& u) {});
 }
 
-template <class T, class U> ScanOp2<T,U> *Scan(const std::function<void (T&, U&)>& transform, const std::function<void (U&)>& init) {
+template <class T, class U> ScanOp2<T,U> *Scan(const std::function<void (const T&, U&)>& transform, const std::function<void (U&)>& init) {
   return new ScanOp2<T,U>(transform, init);
 }
 
@@ -130,20 +130,20 @@ template <class T, class U, class V> class BuildOp : public Operator<T,V> {
  private:
   U state;
   V result;
-  std::function <bool (T&, U&, V&)> fun;
+  std::function <bool (const T&, U&, V&)> fun;
  public:
-  BuildOp(const std::function<bool (T&,U&,V&)>& builder) : fun(builder) {}
-  BuildOp(const std::function<bool (T&,U&,V&)>& builder, U init) : fun(builder), state(init) {}
+  BuildOp(const std::function<bool (const T&,U&,V&)>& builder) : fun(builder) {}
+  BuildOp(const std::function<bool (const T&,U&,V&)>& builder, U init) : fun(builder), state(init) {}
   void onData(RxNode *source, void *value) {
     if (fun(*(T *)value, state, result))
       this->subscribers.push(this, &result);
   }
 };
 
-template <class T, class U, class V> BuildOp<T,U,V> *Build(const std::function<bool(T&,U&,V&)>& build) {
+template <class T, class U, class V> BuildOp<T,U,V> *Build(const std::function<bool(const T&,U&,V&)>& build) {
   return new BuildOp<T,U,V>(build);
 }
-template <class T, class U, class V> BuildOp<T,U,V> *Build(const std::function<bool(T&,U&,V&)>& build, V init) {
+template <class T, class U, class V> BuildOp<T,U,V> *Build(const std::function<bool(const T&,U&,V&)>& build, V init) {
   return new BuildOp<T,U,V>(build, init);
 }
 
@@ -151,9 +151,9 @@ enum Action { TPass, TDrop, TClose };
 
 template <class T> class TrafficOp : public Operator<T,T> {
  private:
-  std::function<Action (T&)> fun;
+  std::function<Action (const T&)> fun;
  public:
-  TrafficOp(const std::function<Action (T&)>& control) : fun(control) { }
+  TrafficOp(const std::function<Action (const T&)>& control) : fun(control) { }
   void onData(RxNode *source, void *value) {
     T current = *(T *)value;
     Action state = fun(current);
@@ -167,7 +167,7 @@ template <class T> class TrafficOp : public Operator<T,T> {
   }
 };
 
-template <class T> TrafficOp<T> *Traffic(const std::function<Action (T&)>& control) {
+template <class T> TrafficOp<T> *Traffic(const std::function<Action (const T&)>& control) {
   return new TrafficOp<T>(control);
 }
 
@@ -192,13 +192,13 @@ template <class T, int capacity> class WindowOp : public Operator<T,fifo<T,capac
 template <class T, class U, int capacity> class SlidingOp : public Operator<T,U> {
  private:
   U accum;
-  std::function<U (T&, U&)> inc;
-  std::function<U (T&, U&)> dec;
+  std::function<U (const T&, const U&)> inc;
+  std::function<U (const T&, const U&)> dec;
   bool partials;
   fifoWr<T,capacity> window;
  public:
-  SlidingOp(const std::function<U (T&, U&)>& add,
-	    const std::function<U (T&, U&)>& rem,
+  SlidingOp(const std::function<U (const T&, const U&)>& add,
+	    const std::function<U (const T&, const U&)>& rem,
 	    U init, bool all) : accum(init), inc(add), dec(rem) {
     partials = all;
   }
@@ -212,7 +212,7 @@ template <class T, class U, int capacity> class SlidingOp : public Operator<T,U>
   }
 };
 
-template <class T, class U, int capacity> SlidingOp<T,U,capacity> *Sliding(const std::function<U (T&, U&)>& add, const std::function<U (T&, U&)>& rem, U init, bool all=false) {
+template <class T, class U, int capacity> SlidingOp<T,U,capacity> *Sliding(const std::function<U (const T&, const U&)>& add, const std::function<U (const T&, const U&)>& rem, U init, bool all=false) {
   return new SlidingOp<T,U,capacity>(add, rem, init, all);
 }
 
@@ -237,9 +237,9 @@ template <class T, class U, int width> class BatchFoldOp : public Operator<T,U> 
  private:
   int count;
   U accum, initial;
-  std::function<U (T&, U&)> fun;
+  std::function<U (const T&, const U&)> fun;
  public:
-  BatchFoldOp(const std::function<U (T&, U&)> fun, U init)
+  BatchFoldOp(const std::function<U (const T&, const U&)> fun, U init)
     : accum(init), initial(init), fun(fun) { count = 0; }
 
   void onData(RxNode *source, void *value) {
@@ -253,7 +253,7 @@ template <class T, class U, int width> class BatchFoldOp : public Operator<T,U> 
   }
 };
 
-template <class T, class U, int width> BatchFoldOp<T,U,width> *BatchFold(const std::function<U (T&, U&)> fun, U init) {
+template <class T, class U, int width> BatchFoldOp<T,U,width> *BatchFold(const std::function<U (const T&, const U&)> fun, U init) {
   return new BatchFoldOp<T,U,width>(fun, init);
 }
 
@@ -261,9 +261,9 @@ template <class T, class U, int width> class BatchFold1Op : public Operator<T,U>
  private:
   int count;
   U accum;
-  std::function<U (T&, U&)> fun;
+  std::function<U (const T&, const U&)> fun;
  public:
-  BatchFold1Op(const std::function<U (T&, U&)>& fun) : fun(fun) {
+  BatchFold1Op(const std::function<U (const T&, const U&)>& fun) : fun(fun) {
     count = 0;
   }
 
@@ -280,7 +280,7 @@ template <class T, class U, int width> class BatchFold1Op : public Operator<T,U>
   }
 };
 
-template <class T, class U, int width> BatchFold1Op<T,U,width> *BatchFold1(const std::function<U (T&, U&)>& fun) {
+template <class T, class U, int width> BatchFold1Op<T,U,width> *BatchFold1(const std::function<U (const T&, const U&)>& fun) {
   return new BatchFold1Op<T,U,width>(fun);
 }
 
@@ -288,9 +288,9 @@ template <class T, class U, int width> class BatchScanOp : public Operator<T,U> 
  private:
   int count;
   U accum, initial;
-  std::function<U (T&, U&)> fun;
+  std::function<U (const T&, const U&)> fun;
  public:
-  BatchScanOp(const std::function<U (T&, U&)>& fun, U init)
+  BatchScanOp(const std::function<U (const T&, const U&)>& fun, U init)
     : accum(init), initial(init), fun(fun) { count = 0; }
 
   void onData(RxNode *source, void *value) {
@@ -304,7 +304,7 @@ template <class T, class U, int width> class BatchScanOp : public Operator<T,U> 
   }
 };
 
-template <class T, class U, int width> BatchScanOp<T,U,width> *BatchScan(const std::function<U (T&, U&)>& fun, U init) {
+template <class T, class U, int width> BatchScanOp<T,U,width> *BatchScan(const std::function<U (const T&, const U&)>& fun, U init) {
   return new BatchScanOp<T,U,width>(fun, init);
 }
 
@@ -654,9 +654,9 @@ template <class T> ThrottleOp<T> *Throttle(unsigned long millis) {
 template <class T, class U> class IntermFoldOp : public Intermediate<T,U> {
  private:
   U accum, initial;
-  std::function<U (T&, U&)> fun;
+  std::function<U (const T&, const U&)> fun;
  public:
-  IntermFoldOp(const std::function<U (T&, U&)>& fun, U init)
+  IntermFoldOp(const std::function<U (const T&, const U&)>& fun, U init)
     : accum(init), initial(init), fun(fun) { }
 
   void onData(RxNode *source, void *value) {
@@ -669,7 +669,7 @@ template <class T, class U> class IntermFoldOp : public Intermediate<T,U> {
   }
 };
 
-template <class T, class U> IntermFoldOp<T,U> *IntermFold(const std::function<U (T&, U&)>& fun, U init) {
+template <class T, class U> IntermFoldOp<T,U> *IntermFold(const std::function<U (const T&, const U&)>& fun, U init) {
   return new IntermFoldOp<T,U>(fun, init);
 }
 

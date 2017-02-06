@@ -63,6 +63,9 @@ template <class T1, class T2> Tuple2<T1,T2> operator/(Tuple2<T1,T2>& a, double k
   return Tuple2<T1,T2>(a._1 / (T1)k, a._2 / (T2)k);
 }
 
+template <class T1, class T2>
+  using Pair = Tuple2<T1,T2>;
+
 template <class T1, class T2, class T3> class Tuple3 {
  public:
   T1 _1;

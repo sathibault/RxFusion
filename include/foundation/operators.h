@@ -17,26 +17,27 @@ limitations under the License.
 */
 
 template <class T, class U> MapOp<T,U> *Project1() {
-  return Map<T,U>([](T& t) -> U { return t._1; });
+  return Map<T,U>([](const T& t) -> U { return t._1; });
 }
 template <class T, class U> MapOp<T,U> *Project2() {
-  return Map<T,U>([](T& t) -> U { return t._2; });
+  return Map<T,U>([](const T& t) -> U { return t._2; });
 }
 template <class T, class U> MapOp<T,U> *Project3() {
-  return Map<T,U>([](T& t) -> U { return t._3; });
+  return Map<T,U>([](const T& t) -> U { return t._3; });
 }
 
 template <class T, class U> MapOp<T,U> *Project4() {
-  return Map<T,U>([](T& t) -> U { return t._4; });
+  return Map<T,U>([](const T& t) -> U { return t._4; });
 }
 
 template <class T, class U> Operator<T,U> *Count() {
-  return Scan<T,U>([](T& cur, U& count) -> U { return count + 1; }, 0);
+  return Scan<T,U>([](const T& cur, U& count) { count += 1; },
+		   [](U& count) { count = 0; });
 }
 
 template <class T, int width> const Compound<T,T> Delay() {
   auto *win = new WindowOp<T,width>();
-  auto *map = Map<fifo<T,width>,T>([](fifo<T,width>& win) -> T {
+  auto *map = Map<fifo<T,width>,T>([](const fifo<T,width>& win) -> T {
       return win.get(win.begin());
     });
   map->attach(win);
@@ -75,19 +76,19 @@ template <class T, class U, int width> const Compound<T,U> WinFold1(const std::f
 //////////////////////////////////////// Aggregations
 
 template <class T, int width> Operator<T,T> *WinSum() {
-  return Sliding<T,T,width>([](T& elm, T& accum) -> T {
+  return Sliding<T,T,width>([](const T& elm, const T& accum) -> T {
       return accum + elm;
-    }, [](T& elm, T& accum) -> T {
+    }, [](const T& elm, T& accum) -> T {
       return accum - elm;
     }, T(0));
 }
 
 template <class T, int width> Operator<T,T> *SumOf() {
-  return BatchFold1<T,T,width>([](T& cur, T& accum)->T { return accum+cur; });
+  return BatchFold1<T,T,width>([](const T& cur, const T& accum)->T { return accum+cur; });
 }
 
 template <class T> const Compound<T,T> SumOver(unsigned long millis) {
-  auto *sum = IntermFold<T,T>([](T& elm, T& accum) -> T {
+  auto *sum = IntermFold<T,T>([](const T& elm, const T& accum) -> T {
       return accum + elm;
     }, T(0));
   auto *poll = Poll<T>(millis);
@@ -96,29 +97,29 @@ template <class T> const Compound<T,T> SumOver(unsigned long millis) {
 }
 
 template <class T, int width> const Compound<T,T> WinAverage() {
-  auto *sum = Sliding<T,T,width>([](T& elm, T& accum)->T {
+  auto *sum = Sliding<T,T,width>([](const T& elm, const T& accum)->T {
       return accum + elm;
-    }, [](T& elm, T& accum)->T {
+    }, [](const T& elm, T& accum)->T {
       return accum - elm;
     }, T(0));
-  auto *map = Map<T,T>([](T& accum)->T { return accum/width; });
+  auto *map = Map<T,T>([](const T& accum)->T { return accum/width; });
   map->attach(sum);
   return Compound<T,T>(sum, map);
 }
 
 template <class T, int width> const Compound<T,T> AverageOf() {
-  auto *sum = BatchFold1<T,T,width>([](T& cur, T& accum)->T { return accum+cur; });
-  auto *map = Map<T,T>([](T& accum)->T { return accum/width; });
+  auto *sum = BatchFold1<T,T,width>([](const T& cur, const T& accum)->T { return accum+cur; });
+  auto *map = Map<T,T>([](const T& accum)->T { return accum/width; });
   map->attach(sum);
   return Compound<T,T>(sum, map);
 }
 
 template <class T> const Compound<T,T> AverageOver(unsigned long millis) {
-  auto *sum = IntermFold<T,Tuple2<T,int>>([](T& elm, Tuple2<T,int>& t)->Tuple2<T,int> {
+  auto *sum = IntermFold<T,Tuple2<T,int>>([](const T& elm, const Tuple2<T,int>& t)->Tuple2<T,int> {
       return Tuple2<T,int>(t._1 + elm, t._2 + 1);
     }, Tuple2<T,int>(0,0));
   auto *poll = Poll<Tuple2<T,int>>(millis);
-  auto *map = Map<Tuple2<T,int>,T>([](Tuple2<T,int>& t)->T {
+  auto *map = Map<Tuple2<T,int>,T>([](const Tuple2<T,int>& t)->T {
       return (t._2 > 0) ? t._1/t._2 : 0;
     });
   poll->setSource(sum);
@@ -143,13 +144,13 @@ template <class T, int width> const Compound<T,T> WinMin() {
 }
 
 template <class T, int width> Operator<T,T> *MinOf() {
-  return BatchFold1<T,T,width>([](T& cur, T& accum)->T {
+  return BatchFold1<T,T,width>([](const T& cur, const T& accum)->T {
       return (cur < accum) ? cur : accum;
     });
 }
 
 template <class T> const Compound<T,T> MinOver(unsigned long millis) {
-  auto *fold = IntermFold<T,T>([](T& elm, T& accum) -> T {
+  auto *fold = IntermFold<T,T>([](const T& elm, const T& accum) -> T {
       return (elm < accum) ? elm : accum;
     }, std::numeric_limits<T>::max());
   auto *poll = Poll<T>(millis);
@@ -174,13 +175,13 @@ template <class T, int width> const Compound<T,T> WinMax() {
 }
 
 template <class T, int width> Operator<T,T> *MaxOf() {
-  return BatchFold1<T,T,width>([](T& cur, T& accum)->T {
+  return BatchFold1<T,T,width>([](const T& cur, const T& accum)->T {
       return (cur > accum) ? cur : accum;
     });
 }
 
 template <class T> const Compound<T,T> MaxOver(unsigned long millis) {
-  auto *fold = IntermFold<T,T>([](T& elm, T& accum) -> T {
+  auto *fold = IntermFold<T,T>([](const T& elm, const T& accum) -> T {
       return (elm > accum) ? elm : accum;
     }, std::numeric_limits<T>::min());
   auto *poll = Poll<T>(millis);
@@ -191,35 +192,37 @@ template <class T> const Compound<T,T> MaxOver(unsigned long millis) {
 //////////////////////////////////////// Math
 
 template <class T> Operator<T,T> *Scale(T k) {
-  return new MapOp<T,T>([k](T& x) -> T { return k*x; });
+  return new MapOp<T,T>([k](const T& x) -> T { return k*x; });
 }
 
 template <class T> Operator<T,T> *Add(T b) {
-  return new MapOp<T,T>([b](T& x) -> T { return x+b; });
+  return new MapOp<T,T>([b](const T& x) -> T { return x+b; });
 }
 
 template <class T> Operator<T,T> *ClampHigh(T u) {
-  return new MapOp<T,T>([u](T& x) -> T { return x > u ? u : x; });
+  return new MapOp<T,T>([u](const T& x) -> T { return x > u ? u : x; });
 }
 
 template <class T> Operator<T,T> *ClampLow(T l) {
-  return new MapOp<T,T>([l](T& x) -> T { return x < l ? l : x; });
+  return new MapOp<T,T>([l](const T& x) -> T { return x < l ? l : x; });
 }
 
 template <class T> Operator<T,T> *Clamp(T l, T u) {
-  return new MapOp<T,T>([l,u](T& x) -> T { return x < l ? l : (x > u ? u : x); });
+  return new MapOp<T,T>([l,u](const T& x) -> T { return x < l ? l : (x > u ? u : x); });
 }
 
 template <class T, class U> Operator<T,U> *Toggle(U initial) {
-  return new ScanOp<T,U>([](T& data, U& state) -> U { return !state; }, initial);
+  return new ScanOp<T,U>([](const T& data, const U& state) -> U {
+      return !state;
+    }, initial);
 }
 
 template <class T> Operator<T,T> *Abs() {
-  return new MapOp<T,T>([](T& x) -> T { return x < 0 ? -x : x; });
+  return new MapOp<T,T>([](const T& x) -> T { return x < 0 ? -x : x; });
 }
 
 template <class T, class U> Operator<T,U> *Const(U c) {
-  return new MapOp<T,U>([c](T& x) -> T { return c; });
+  return new MapOp<T,U>([c](const T& x) -> T { return c; });
 }
 
 
@@ -227,7 +230,7 @@ template <class T, class U> Operator<T,U> *Const(U c) {
 
 template <class T> const Compound<T,T> Drop(int drop) {
   auto *cnt = Counted<T,int>();
-  auto *filter = Filter<Tuple2<T,int>>([drop](Tuple2<T,int>& t) -> bool {
+  auto *filter = Filter<Tuple2<T,int>>([drop](const Tuple2<T,int>& t) -> bool {
       return t._2 > drop;
     });
   auto *prj = Project1<Tuple2<T,int>,T>();
@@ -238,7 +241,7 @@ template <class T> const Compound<T,T> Drop(int drop) {
 
 template <class T> const Compound<T,T> Take(int take) {
   auto *cnt = Counted<T,int>();
-  auto *traffic = Traffic<Tuple2<T,int>>([take](Tuple2<T,int>& t) -> Action {
+  auto *traffic = Traffic<Tuple2<T,int>>([take](const Tuple2<T,int>& t) -> Action {
       return (t._2 <= take) ? TPass : TClose;
     });
   auto *prj = Project1<Tuple2<T,int>,T>();
@@ -248,14 +251,14 @@ template <class T> const Compound<T,T> Take(int take) {
 }
 
 template <class T> const Compound<T,T> Dedup() {
-  auto *scan = Scan<T,Tuple2<Maybe<T>,bool>>([](T& cur, Tuple2<Maybe<T>,bool>& state) -> Tuple2<Maybe<T>,bool> {
+  auto *scan = Scan<T,Tuple2<Maybe<T>,bool>>([](const T& cur, const Tuple2<Maybe<T>,bool>& state) -> Tuple2<Maybe<T>,bool> {
       return Tuple2<Maybe<T>,bool>(Maybe<T>(cur),
 				   !state._1.exists || cur != state._1.value);
     }, Tuple2<Maybe<T>,bool>());
-  auto *filter = Filter<Tuple2<Maybe<T>,bool>>([](Tuple2<Maybe<T>,bool>& x) -> bool {
+  auto *filter = Filter<Tuple2<Maybe<T>,bool>>([](const Tuple2<Maybe<T>,bool>& x) -> bool {
       return x._2;
     });
-  auto *prj = Map<Tuple2<Maybe<T>,bool>,T>([](Tuple2<Maybe<T>,bool>& x) -> T {
+  auto *prj = Map<Tuple2<Maybe<T>,bool>,T>([](const Tuple2<Maybe<T>,bool>& x) -> T {
       return x._1.value;
     });
   filter->attach(scan);
@@ -267,89 +270,89 @@ template <class T> const Compound<T,T> Dedup(unsigned long expire) {
   // Previous value, timestamp, emit
   typedef Tuple3<Maybe<T>,unsigned long,bool> DedupState;
 
-  auto *scan = Scan<T,DedupState>([expire](T& cur, DedupState& state) -> DedupState {
+  auto *scan = Scan<T,DedupState>([expire](const T& cur, const DedupState& state) -> DedupState {
       unsigned long now = millis();
       unsigned long age = now - state._2; // indepotent to wrapping
       bool emit = !state._1.exists || cur != state._1.value || age >= expire;
       unsigned long t = emit ? now : state._2;
       return DedupState(Maybe<T>(cur),t,emit);
     }, DedupState(Maybe<T>(),0,false));
-  auto *filter = Filter<DedupState>([](DedupState& x) -> bool {
+  auto *filter = Filter<DedupState>([](const DedupState& x) -> bool {
       return x._3;
     });
-  auto *prj = Map<DedupState,T>([](DedupState& x) -> T { return x._1.value; });
+  auto *prj = Map<DedupState,T>([](const DedupState& x) -> T { return x._1.value; });
   filter->attach(scan);
   prj->attach(filter);
   return Compound<T,T>(scan, prj);
 }
 
 Operator<bool,bool> *True() {
-  return new FilterOp<bool>([](bool& x) -> bool { return x; });
+  return new FilterOp<bool>([](const bool& x) -> bool { return x; });
 }
 
 Operator<bool,bool> *False() {
-  return new FilterOp<bool>([](bool& x) -> bool { return !x; });
+  return new FilterOp<bool>([](const bool& x) -> bool { return !x; });
 }
 
 template <class T> Operator<T,T> *Over(T th) {
-  return new FilterOp<T>([th](T& x) -> bool { return x > th; });
+  return new FilterOp<T>([th](const T& x) -> bool { return x > th; });
 }
 
 template <class T> Operator<T,T> *Under(T th) {
-  return new FilterOp<T>([th](T& x) -> bool { return x < th; });
+  return new FilterOp<T>([th](const T& x) -> bool { return x < th; });
 }
 
 template <class T> Operator<T,T> *AtLeast(T th) {
-  return new FilterOp<T>([th](T& x) -> bool { return x >= th; });
+  return new FilterOp<T>([th](const T& x) -> bool { return x >= th; });
 }
 
 template <class T> Operator<T,T> *AtMost(T th) {
-  return new FilterOp<T>([th](T& x) -> bool { return x <= th; });
+  return new FilterOp<T>([th](const T& x) -> bool { return x <= th; });
 }
 
 template <class T> Operator<T,T> *Positive() {
-  return new FilterOp<T>([](T& x) -> bool { return x > 0; });
+  return new FilterOp<T>([](const T& x) -> bool { return x > 0; });
 }
 
 template <class T> Operator<T,T> *Negative() {
-  return new FilterOp<T>([](T& x) -> bool { return x < 0; });
+  return new FilterOp<T>([](const T& x) -> bool { return x < 0; });
 }
 
 template <class T> Operator<T,T> *Zero() {
-  return new FilterOp<T>([](T& x) -> bool { return x == 0; });
+  return new FilterOp<T>([](const T& x) -> bool { return x == 0; });
 }
 
 template <class T> Operator<T,bool> *IsOver(T th) {
-  return new MapOp<T,bool>([th](T& x) -> bool { return x > th; });
+  return new MapOp<T,bool>([th](const T& x) -> bool { return x > th; });
 }
 
 template <class T> Operator<T,bool> *IsUnder(T th) {
-  return new MapOp<T,bool>([th](T& x) -> bool { return x < th; });
+  return new MapOp<T,bool>([th](const T& x) -> bool { return x < th; });
 }
 
 template <class T> Operator<T,bool> *IsAtLeast(T th) {
-  return new MapOp<T,bool>([th](T& x) -> bool { return x >= th; });
+  return new MapOp<T,bool>([th](const T& x) -> bool { return x >= th; });
 }
 
 template <class T> Operator<T,bool> *IsAtMost(T th) {
-  return new MapOp<T,bool>([th](T& x) -> bool { return x <= th; });
+  return new MapOp<T,bool>([th](const T& x) -> bool { return x <= th; });
 }
 
 template <class T> Operator<T,bool> *IsPositive() {
-  return new MapOp<T,bool>([](T& x) -> bool { return x > 0; });
+  return new MapOp<T,bool>([](const T& x) -> bool { return x > 0; });
 }
 
 template <class T> Operator<T,bool> *IsNegative() {
-  return new MapOp<T,bool>([](T& x) -> bool { return x < 0; });
+  return new MapOp<T,bool>([](const T& x) -> bool { return x < 0; });
 }
 
 template <class T> Operator<T,bool> *IsZero() {
-  return new MapOp<T,bool>([](T& x) -> bool { return x == 0; });
+  return new MapOp<T,bool>([](const T& x) -> bool { return x == 0; });
 }
 
 // This ugly string business allows us to operate without using the heap!
 template <int max> Operator<xstring,Vec<xstring,max>> *Split(char delim) {
-  return Build<xstring,Tuple2<strbuf,Vec<strslice,max>>,Vec<xstring,max>>([delim](xstring& src, Tuple2<strbuf,Vec<strslice,max>>& data, Vec<xstring,max>& split) -> bool {
+  return Build<xstring,Tuple2<strbuf,Vec<strslice,max>>,Vec<xstring,max>>([delim](const xstring& src, Tuple2<strbuf,Vec<strslice,max>>& data, Vec<xstring,max>& split) -> bool {
       data._1.reset();
       src->writeto(data._1);
 
@@ -382,7 +385,7 @@ template <int max> Operator<xstring,Vec<xstring,max>> *Split(char delim) {
 }
 
 Operator<char,strbuf> *Lines() {
-  return Build<char,bool,strbuf>([](char& ch, bool& nl, strbuf& result) -> bool {
+  return Build<char,bool,strbuf>([](const char& ch, bool& nl, strbuf& result) -> bool {
     if (nl)
       result.reset();
     if (ch != '\r' && ch != '\n')

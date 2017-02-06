@@ -78,14 +78,14 @@ TEST(OperatorTest, Misc) {
   Range<int> r(1,10);
   Range<int> three(1,3);
 
-  r >> Map<int,int>([](int x)->int { return x/3; }) >> Dedup<int>() >> out;
+  r >> Map<int,int>([](const int x)->int { return x/3; }) >> Dedup<int>() >> out;
   EXPECT_STREQ(out.text(), "0 1 2 3");
   out.clear();
 
   // inputs: 1 2 3 4  5  6  7  8  9  10
   // state:  1 3 6 10 15 21 28 36 45 55
   // result:     3 5        14 18
-  r >> Build<int,int, int>([](int& value, int& state, int& result)->bool {
+  r >> Build<int,int, int>([](const int& value, int& state, int& result)->bool {
       state += value;
       result = state >> 1;
       return (state & 1) == 0;
@@ -103,7 +103,7 @@ TEST(OperatorTest, Misc) {
   // 800 8 => 1 drop = t-100
   // 900 9 => 1 drop = t-200
   // 1000 10 => 1 drop = t-300
-  r >> Iterate<int>(100) >> Map<int,int>([](int x)->int { return x/7; }) >> Dedup<int>(350) >> out;
+  r >> Iterate<int>(100) >> Map<int,int>([](const int x)->int { return x/7; }) >> Dedup<int>(350) >> out;
   EXPECT_STREQ(out.text(), "0 0 1");
   out.clear();
   
@@ -122,7 +122,7 @@ TEST(OperatorTest, Misc) {
   three >>
     Format<int>("A$1;B$1") >>
     Split<3>(';') >>
-    Map<Vec<xstring,3>,xstring>([](Vec<xstring,3>& x, xstring& y) {
+    Map<Vec<xstring,3>,xstring>([](const Vec<xstring,3>& x, xstring& y) {
 	y = x[0];
       }) >>
     strout;
@@ -132,7 +132,7 @@ TEST(OperatorTest, Misc) {
   three >>
     Format<int>("A$1;B$1") >>
     Split<3>(';') >>
-    Map<Vec<xstring,3>,xstring>([](Vec<xstring,3>& x, xstring& y) {
+    Map<Vec<xstring,3>,xstring>([](const Vec<xstring,3>& x, xstring& y) {
 	y = x[1];
       }) >>
     strout;
@@ -142,7 +142,7 @@ TEST(OperatorTest, Misc) {
   three >>
     Format<int>("A$1;B$1") >>
     Split<3>(';') >>
-    Map<Vec<xstring,3>,xstring>([](Vec<xstring,3>& x, xstring& y) {
+    Map<Vec<xstring,3>,xstring>([](const Vec<xstring,3>& x, xstring& y) {
 	y = x[2];
       }) >>
     strout;
