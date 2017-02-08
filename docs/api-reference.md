@@ -101,7 +101,8 @@ Operators that aggregate or summarize information from multiple items in output 
 * [Lines](operators.md#lines) Output a stream of lines (strbuf class) from an input stream of characters (char).
 * [Format](operators.md#format) Build a formatted string from input items using the `format` template.  Any occurrence of `$1` in the template is replaced by the input value.  Occurrences of `$t` are replaced by the current time as a Unix timestamp (number of seconds since Jan. 1, 1970).
 * [Split](operators.md#split) Splits each input string at the given `delimiter` and outputs the resulting strings in a vector.  The C++ types are `strbuf` input and `Vec<strbuf,max-fields>` output.
-* [String](operators.md#string) Converts the input values to a string and outputs it as a `strbuf`
+* [ToString](operators.md#tostring) Converts the input values to a string and outputs it as a `strbuf`
+* [ToJson](operators.md#tojson) Converts the input values to a JSON string and outputs it as a `jsons`
 
 ## Miscellaneous
 

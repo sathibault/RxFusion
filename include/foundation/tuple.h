@@ -235,3 +235,33 @@ template <class T1, class T2, class T3, class T4> void writeto(strbuf& sbuf, Tup
     writeto(sbuf, t._4);
     writeto(sbuf, ')');
 }
+
+template <class T1, class T2> void writejson(strbuf& sbuf, Tuple2<T1,T2>& t) {
+    writeto(sbuf, '[');
+    writejson(sbuf, t._1);
+    writeto(sbuf, ',');
+    writejson(sbuf, t._2);
+    writeto(sbuf, ']');
+}
+
+template <class T1, class T2, class T3> void writejson(strbuf& sbuf, Tuple3<T1,T2,T3>& t) {
+    writeto(sbuf, '[');
+    writejson(sbuf, t._1);
+    writeto(sbuf, ',');
+    writejson(sbuf, t._2);
+    writeto(sbuf, ',');
+    writejson(sbuf, t._3);
+    writeto(sbuf, ']');
+}
+
+template <class T1, class T2, class T3, class T4> void writejson(strbuf& sbuf, Tuple4<T1,T2,T3,T4>& t) {
+    writeto(sbuf, '[');
+    writejson(sbuf, t._1);
+    writeto(sbuf, ',');
+    writejson(sbuf, t._2);
+    writeto(sbuf, ',');
+    writejson(sbuf, t._3);
+    writeto(sbuf, ',');
+    writejson(sbuf, t._4);
+    writeto(sbuf, ']');
+}

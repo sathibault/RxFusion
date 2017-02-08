@@ -78,6 +78,45 @@ class strbuf {
       buf = (char *)realloc(buf, size * sizeof(char));
     }
   }
+  
+  // Find first occurrence of pat, case insensitive.
+  const char *findfirst(const char *s, const char *send, char pat) const {
+    if (isupper(pat)) pat = tolower(pat);
+    while (s < send) {
+      char ch = *s;
+      if (isupper(ch)) ch = tolower(ch);
+      if (ch == pat)
+	return s;
+      s++;
+    }
+    return NULL;
+  }
+
+  bool glob(const char *s, const char *send, const char *p, const char *pend) const {
+    while (s < send && p < pend) {
+      char pat = *p++;
+      if (pat == '*') {
+	if (p == pend)
+	  return true;
+	pat = *p;
+	while ((s = findfirst(s, send, pat)) != NULL) {
+	  if (glob(s, send, p, pend))
+	    return true;
+	  s++;
+	}
+	return false;
+      } else if (pat == '?') {
+	s++;
+      } else {
+	char ch = *s++;
+	if (isupper(ch)) ch = tolower(ch);
+	if (isupper(pat)) pat = tolower(pat);
+	if (ch != pat)
+	  return false;
+      }
+    }
+    return s == send && p == pend;
+  }
 
  public:
   // non-assignable
@@ -97,7 +136,10 @@ class strbuf {
   const char *c_str() const { buf[end] = 0; return buf; }
   const char *data() const { return buf; }
   uint16_t length() const { return end; }
-
+  bool operator==(const char *str) const {
+    size_t sz = strlen(str);
+    return (sz == end) && memcmp(str, buf, sz) == 0;
+  }
   void reset() { end = 0; }
   void reset(const char *s) { end = 0; append(s); }
   void reset(const char *s, int len) { end = 0; append(s, len); }
@@ -149,6 +191,10 @@ class strbuf {
     sprintf(buf+end, "%f", x);
     end += strlen(buf+end);
   }
+
+  bool glob(const char *pattern, uint16_t patlen) const {
+    return glob(buf, buf+end, pattern, pattern+patlen);
+  }
 };
 
 // A lazy string type implemented as an abstract string generator
@@ -178,6 +224,12 @@ class strslice : public strgen {
   void writeto(strbuf& buf) {
     buf.append(str, len);
   }
+};
+
+// A json string.  Having a distinct type allows us to know when a string
+// should be quoted or already represents json.
+
+class jsons : public strbuf {
 };
 
 template<class T, int capacity> class fifo {
@@ -215,3 +267,12 @@ inline void writeto(strbuf& buf, unsigned int x) { buf.append(x); }
 inline void writeto(strbuf& buf, float x) { buf.append(x); }
 inline void writeto(strbuf& buf, const strbuf& o) { buf.append(o.data(), o.length()); }
 inline void writeto(strbuf& buf, xstring o) { o->writeto(buf); }
+
+inline void writejson(strbuf& buf, int x) { buf.append(x); }
+inline void writejson(strbuf& buf, unsigned int x) { buf.append(x); }
+inline void writejson(strbuf& buf, float x) { buf.append(x); }
+inline void writejson(strbuf& buf, const char *s) { buf.append('"'); buf.append(s); buf.append('"'); }
+inline void writejson(strbuf& buf, const char *s, int len) { buf.append('"'); buf.append(s, len); buf.append('"'); }
+inline void writejson(strbuf& buf, const strbuf& o) { buf.append('"'); buf.append(o.data(), o.length()); buf.append('"'); }
+inline void writejson(strbuf& buf, const jsons& o) { buf.append(o.data(), o.length()); }
+inline void writejson(strbuf& buf, xstring o) { buf.append('"'); o->writeto(buf); buf.append('"'); }

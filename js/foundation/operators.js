@@ -342,6 +342,21 @@ Zero = function () {
 }
 
 
+//////////////////////////////////////// String
+
+ToString = function() {
+    return Map(x => x.toString());
+}
+
+ToJson = function() {
+    return Map(x => JSON.stringify(x));
+}
+
+Split = function(delimiter) {
+    return Map(x => x.split(delimiter));
+}
+
+
 //////////////////////////////////////// Misc
 
 SocketIO = function Constructor(io, event) {

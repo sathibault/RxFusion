@@ -18,7 +18,7 @@ Operators that aggregate or summarize information from multiple items in output 
 
 ## String operators
 
-[Lines](operators.md#lines) – [Format](operators.md#format) – [Split](operators.md#split) – [String](operators.md#string)
+[Lines](operators.md#lines) – [Format](operators.md#format) – [Split](operators.md#split) – [ToString](operators.md#tostring) – [ToJson](operators.md#tojson)
 
 ## Miscellaneous
 

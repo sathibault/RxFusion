@@ -82,6 +82,32 @@ testgroup('sources test','all', () => {
     });
 });
 
+testgroup('string tests','all', () => {
+    testcase('string', () => {
+	var r = new Range(1,3);
+	var out = new Doc();
+	return rxbase.test()(r >> ToString() >> Map(x => 'A'+x) >> out).then(x => {
+	    assert.equal(out.text(), 'A1 A2 A3');
+	});
+    });
+
+    testcase('json', () => {
+	var r = new Range(1,3);
+	var out = new Doc();
+	return rxbase.test()(r >> ToString() >> Map(x => 'A'+x) >> ToJson() >> out).then(x => {
+	    assert.equal(out.text(), '"A1" "A2" "A3"');
+	});
+    });
+
+    testcase('split', () => {
+	var r = new Range(1,3);
+	var out = new Doc();
+	return rxbase.test()(r >> ToString() >> Map(x => 'A;'+x) >> Split(';') >> out).then(x => {
+	    assert.equal(out.text(), 'A,1 A,2 A,3');
+	});
+    });
+});
+
 testgroup('operator test','filtering', () => {
     testcase('drop', () => {
 	var r = new Range(1,8);

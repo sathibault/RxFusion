@@ -39,3 +39,15 @@ template <class T, int len> void writeto(strbuf& sbuf, Vec<T,len>& t) {
   }
   writeto(sbuf, ']');
 }
+
+template <class T, int len> void writejson(strbuf& sbuf, Vec<T,len>& t) {
+  writeto(sbuf, '[');
+  if (len > 0) {
+    writeto(sbuf, t[0]);
+    for (int i = 1; i < len; i++) {
+      writeto(sbuf, ',');
+      writeto(sbuf, t[i]);
+    }
+  }
+  writeto(sbuf, ']');
+}

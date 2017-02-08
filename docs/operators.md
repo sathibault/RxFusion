@@ -215,7 +215,7 @@ Operations that transforms each input item to produce an output item.
 ![Const](img/Const_diag.png)
 
 <img align="left" src="../img/cpp.png">
-Const&lt;*type*&gt;(*value*)
+Const&lt;*in-type*,*out-type*&gt;(*value*)
 <br>
 <img align="left" src="../img/javascript.png">
 Const(*value*)
@@ -702,19 +702,29 @@ Build a formatted string from input items using the `format` template.  Any occu
 Split&lt;*max-fields*&gt;(*delimiter*)
 <br>
 <img align="left" src="../img/javascript.png">
-N/A
+Split()
 
 Splits each input string at the given `delimiter` and outputs the resulting strings in a vector.  The C++ types are `strbuf` input and `Vec<strbuf,max-fields>` output.
 
-### String
+### ToString
 
 <img align="left" src="../img/cpp.png">
-String&lt;*input-type*&gt;()
+ToString&lt;*input-type*&gt;()
 <br>
 <img align="left" src="../img/javascript.png">
-N/A
+ToString()
 
 Converts the input values to a string and outputs it as a `strbuf`
+
+### ToJson
+
+<img align="left" src="../img/cpp.png">
+ToJson&lt;*input-type*&gt;()
+<br>
+<img align="left" src="../img/javascript.png">
+ToJson()
+
+Converts the input values to a JSON string and outputs it as a `jsons`
 
 ## Miscellaneous
 

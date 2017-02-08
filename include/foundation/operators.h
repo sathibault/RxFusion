@@ -222,7 +222,7 @@ template <class T> Operator<T,T> *Abs() {
 }
 
 template <class T, class U> Operator<T,U> *Const(U c) {
-  return Map<T,U>([c](const T& x) -> T { return c; });
+  return Map<T,U>([c](const T& x) -> U { return c; });
 }
 
 
@@ -350,11 +350,17 @@ template <class T> Operator<T,bool> *IsZero() {
   return Map<T,bool>([](const T& x) -> bool { return x == 0; });
 }
 
-template <class T> Operator<T,strbuf> *String() {
+template <class T> Operator<T,strbuf> *ToString() {
   return Scan<T,strbuf>([](const T& src, strbuf& str) {
       str.reset();
       writeto(str, src);
-      puts(str.c_str());
+    });
+}
+
+template <class T> Operator<T,jsons> *ToJson() {
+  return Scan<T,jsons>([](const T& src, jsons& str) {
+      str.reset();
+      writeto(str, src);
     });
 }
 

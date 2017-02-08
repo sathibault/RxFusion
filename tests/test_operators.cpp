@@ -120,7 +120,7 @@ TEST(OperatorTest, Misc) {
   out.clear();
 
   three >>
-    Format<int>("A$1;B$1") >> String<xstring>() >>
+    Format<int>("A$1;B$1") >> ToString<xstring>() >>
     Split<3>(';') >>
     Map<Vec<strbuf,3>,strbuf>([](const Vec<strbuf,3>& x, strbuf& y) {
 	y.reset(x[0]);
@@ -130,7 +130,7 @@ TEST(OperatorTest, Misc) {
   strout.clear();
 
   three >>
-    Format<int>("A$1;B$1") >> String<xstring>() >>
+    Format<int>("A$1;B$1") >> ToString<xstring>() >>
     Split<3>(';') >>
     Map<Vec<strbuf,3>,strbuf>([](const Vec<strbuf,3>& x, strbuf& y) {
 	y.reset(x[1]);
@@ -140,7 +140,7 @@ TEST(OperatorTest, Misc) {
   strout.clear();
 
   three >>
-    Format<int>("A$1;B$1") >> String<xstring>() >>
+    Format<int>("A$1;B$1") >> ToString<xstring>() >>
     Split<3>(';') >>
     Map<Vec<strbuf,3>,strbuf>([](const Vec<strbuf,3>& x, strbuf& y) {
 	y.reset(x[2]);
