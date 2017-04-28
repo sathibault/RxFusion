@@ -73,7 +73,7 @@ class HttpPost : public Consumer<xstring> {
 #endif
     if (client.connect(host, port)) {
       sbuf.reset();
-      ((xstring *)value)->writeto(sbuf);
+      (*(xstring *)value)->writeto(sbuf);
 
       client.print("POST ");
       client.print(path);
@@ -209,7 +209,7 @@ class MqttPub : public Consumer<xstring> {
       connected = connect();
     if (connected) {
       sbuf.reset();
-      ((xstring *)value)->writeto(sbuf);
+      (*(xstring *)value)->writeto(sbuf);
       pkt.makePub(topic, sbuf.c_str());
       trans.write(pkt.data(), pkt.length());
 #if DBG_NET > 0

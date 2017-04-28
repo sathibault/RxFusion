@@ -360,8 +360,8 @@ template <class T> Operator<T,strbuf> *ToString() {
 template <class T> Operator<T,jsons> *ToJson() {
   return Scan<T,jsons>([](const T& src, jsons& str) {
       str.reset();
-      writeto(str, src);
-    });
+      writejson(str, src);
+  });
 }
 
 Operator<char,strbuf> *Lines() {

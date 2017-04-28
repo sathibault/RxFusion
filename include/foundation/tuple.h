@@ -206,7 +206,7 @@ template <class T1, class T2, class T3, class T4> int readtuple(const char *buf,
     return 3;
 }
 
-template <class T1, class T2> void writeto(strbuf& sbuf, Tuple2<T1,T2>& t) {
+template <class T1, class T2> void writeto(strbuf& sbuf, const Tuple2<T1,T2>& t) {
     writeto(sbuf, '(');
     writeto(sbuf, t._1);
     writeto(sbuf, ',');
@@ -214,7 +214,7 @@ template <class T1, class T2> void writeto(strbuf& sbuf, Tuple2<T1,T2>& t) {
     writeto(sbuf, ')');
 }
 
-template <class T1, class T2, class T3> void writeto(strbuf& sbuf, Tuple3<T1,T2,T3>& t) {
+template <class T1, class T2, class T3> void writeto(strbuf& sbuf, const Tuple3<T1,T2,T3>& t) {
     writeto(sbuf, '(');
     writeto(sbuf, t._1);
     writeto(sbuf, ',');
@@ -224,7 +224,7 @@ template <class T1, class T2, class T3> void writeto(strbuf& sbuf, Tuple3<T1,T2,
     writeto(sbuf, ')');
 }
 
-template <class T1, class T2, class T3, class T4> void writeto(strbuf& sbuf, Tuple4<T1,T2,T3,T4>& t) {
+template <class T1, class T2, class T3, class T4> void writeto(strbuf& sbuf, const Tuple4<T1,T2,T3,T4>& t) {
     writeto(sbuf, '(');
     writeto(sbuf, t._1);
     writeto(sbuf, ',');
@@ -236,7 +236,7 @@ template <class T1, class T2, class T3, class T4> void writeto(strbuf& sbuf, Tup
     writeto(sbuf, ')');
 }
 
-template <class T1, class T2> void writejson(strbuf& sbuf, Tuple2<T1,T2>& t) {
+template <class T1, class T2> void writejson(strbuf& sbuf, const Tuple2<T1,T2>& t) {
     writeto(sbuf, '[');
     writejson(sbuf, t._1);
     writeto(sbuf, ',');
@@ -244,7 +244,7 @@ template <class T1, class T2> void writejson(strbuf& sbuf, Tuple2<T1,T2>& t) {
     writeto(sbuf, ']');
 }
 
-template <class T1, class T2, class T3> void writejson(strbuf& sbuf, Tuple3<T1,T2,T3>& t) {
+template <class T1, class T2, class T3> void writejson(strbuf& sbuf, const Tuple3<T1,T2,T3>& t) {
     writeto(sbuf, '[');
     writejson(sbuf, t._1);
     writeto(sbuf, ',');
@@ -254,7 +254,7 @@ template <class T1, class T2, class T3> void writejson(strbuf& sbuf, Tuple3<T1,T
     writeto(sbuf, ']');
 }
 
-template <class T1, class T2, class T3, class T4> void writejson(strbuf& sbuf, Tuple4<T1,T2,T3,T4>& t) {
+template <class T1, class T2, class T3, class T4> void writejson(strbuf& sbuf, const Tuple4<T1,T2,T3,T4>& t) {
     writeto(sbuf, '[');
     writejson(sbuf, t._1);
     writeto(sbuf, ',');
