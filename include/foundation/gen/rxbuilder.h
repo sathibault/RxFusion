@@ -8,6 +8,8 @@ template <class T, class U> const StateNode<U> operator>>(Originator<T>& x, Inte
 
 template <class T> void operator>>(Originator<T>& x, Consumer<T>& sink) {  sink.attach(&x);  CONSTRUCTED }
 
+template <class T> void operator>>(Originator<T>& x, Consumer<T> *sink) {  sink->attach(&x);  CONSTRUCTED }
+
 template <class T> const PipeMerge<T> operator+(const PipeMerge<T>& v, Originator<T>& x) {   return PipeMerge<T>(v, &x); }
 
 template <class T, int len> const PipeVec<T,len+1> operator&(const PipeVec<T,len>& v, Originator<T>& x) {   return PipeVec<T,len+1>(v, &x); }
@@ -43,6 +45,8 @@ template <class T, class U> const PipeNode<U> operator>>(Generator<T>& x, const 
 template <class T, class U> const StateNode<U> operator>>(Generator<T>& x, Intermediate<T,U> *interm) { auto x1 = autoIterator(x); interm->attach(x1);  return StateNode<U>(interm); }
 
 template <class T> void operator>>(Generator<T>& x, Consumer<T>& sink) { auto x1 = autoIterator(x); sink.attach(x1);  CONSTRUCTED }
+
+template <class T> void operator>>(Generator<T>& x, Consumer<T> *sink) { auto x1 = autoIterator(x); sink->attach(x1);  CONSTRUCTED }
 
 template <class T> const PipeMerge<T> operator+(const PipeMerge<T>& v, Generator<T>& x) { auto x1 = autoIterator(x);  return PipeMerge<T>(v, x1); }
 
