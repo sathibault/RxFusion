@@ -1,22 +1,16 @@
-#if 1
-#define currentMillis() millis()
-#else
-// for testing
-#define currentMillis() (millis() + (unsigned long)-100000)
-#endif
-
-// 12 hours
-#define MAX_ALARM 43200000
-#define MIN_ALARM 2000
+static unsigned long milliOffset = 0; // adjustment for sleeping
+#define currentMillis() (milliOffset + millis())
 
 static unsigned long msHi, msLo;
 
+#ifdef RX_DEBUG_OUT
 static void logPair(char *prefix, unsigned long start, unsigned long delay) {
-  Serial.print(prefix);
-  Serial.print(start);
-  Serial.print(",");
-  Serial.println(delay);
+  RX_DEBUG_OUT.print(prefix);
+  RX_DEBUG_OUT.print(start);
+  RX_DEBUG_OUT.print(",");
+  RX_DEBUG_OUT.println(delay);
 }
+#endif
 
 class Scheduled {
  public:
@@ -43,10 +37,23 @@ class Scheduled {
   }
 
   // How long to wait before next scheduled time or 0 if already expired.
+  // precondition: now >= start
+
   unsigned long waitTime(unsigned long now) {
     // Modulo math works here even if now has wrapped since start.
     unsigned long elapsed = now - start;
     return (interval > elapsed) ? interval - elapsed : 0;
+  }
+
+  // Last run time
+  unsigned long lastMillis() {
+    return start;
+  }
+
+  // Scheduled time
+  unsigned long nextMillis() {
+    unsigned long t = currentMillis();
+    return t + waitTime(t);
   }
 
   void insBefore(Scheduled *pl) {
@@ -136,11 +143,13 @@ void setup() {
   if (serial_baud != 0)
     Serial0.begin(serial_baud);
 #else
-  if (serial_baud != 0)
+  if (serial_baud != 0) {
     Serial.begin(serial_baud);
+    while (! Serial); // Wait until Serial is ready
+  }
 #endif
 #ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
-  rtc.begin();
+  rtc.begin(true);
 #endif
   msHi = 0;
   msLo = currentMillis();
@@ -148,65 +157,68 @@ void setup() {
   app();
 }
 
-static bool sleepOn = false;
+////////// Sleep management
 
-#if defined(ARDUINO_ARCH_AVR) || defined(__MQX__)
-void Sleepy() {
+// Sleepy flags
+#define SLEEP_MGR_USB 0x01
+
+static bool _sleepy = false;
+static bool _sleepyUSB = false;
+
+#define USB_WAKE_DELAY 500
+
+void sleepDevices() {
+  // Wait until pending data is sent.
+  if (serial_baud != 0) {
+    Serial.flush();
+    Serial.end();
+  }
+#ifdef USBCON
+  if (_sleepyUSB)
+    USBDevice.detach();
+#endif
 }
+
+void wakeDevices() {
+#ifdef USBCON
+  if (_sleepyUSB) {
+    USBDevice.attach();
+    delay(USB_WAKE_DELAY);
+  }
 #endif
 
-#ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
-void Sleepy() {
-  if (always.next == NULL) {
-    if (interval.next != NULL) {
-      unsigned long n;
-
-      uint8_t hr = rtc.getHours();
-      uint8_t min = rtc.getMinutes();
-      uint8_t sec = rtc.getSeconds();
-      unsigned long now = currentMillis();
-      unsigned long wait = interval.next->waitTime(now);
-      if (wait < MIN_ALARM) return;
-      if (wait > MAX_ALARM) wait = MAX_ALARM;
-      wait -= 1000; // don't be late
-
-      //logPair("T ",min,sec);
-
-      n = wait / 3600000;
-      hr += n;
-      if (hr >= 24) hr -= 24;
-      wait -= n * 3600000;
-
-      n = wait / 60000;
-      min += n;
-      if (min >= 60) {
-	min -= 60;
-	hr += 1;
-	if (hr >= 24) hr -= 24;
-      }
-
-      n = wait / 1000;
-      sec += n;
-      if (sec >= 60) {
-	sec -= 60;
-	min += 1;
-	if (min >= 60) {
-	  min -= 60;
-	  hr += 1;
-	  if (hr >= 24) hr -= 24;
-	}
-      }
-      //logPair("A ",min,sec);
-
-      sleepOn = true;
-      rtc.setAlarmTime(hr, min, sec);
-      rtc.enableAlarm(rtc.MATCH_HHMMSS);
-      rtc.standbyMode();
-    } else
-      abort();
+  if (serial_baud != 0) {
+    Serial.begin(serial_baud);
+    while (! Serial);
   }
 }
+
+#if defined(ARDUINO_ARCH_AVR)
+#include "avr-sleep.h"
+#else
+#ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
+#include "samd-sleep.h"
+#else
+void initSleep(uint8_t flags) { }
 #endif
+#endif
+
+void Sleepy(uint8_t flags) {
+  initSleep(flags);
+  _sleepyUSB = (flags & SLEEP_MGR_USB) != 0;
+#ifdef USBCON
+  if (!_sleepyUSB)
+    USBDevice.detach();
+#endif
+  _sleepy = true;
+}
+
+void Sleepy() {
+  Sleepy(0);
+}
+
+
+//////////////////// Main loop
 
 void loop() {
   Scheduled *si, *next;
@@ -249,5 +261,6 @@ void loop() {
     }
   }
 
-  if (sleepOn) Sleepy();
+  if (_sleepy && always.next == NULL && interval.next != NULL)
+    doSleep();
 }
